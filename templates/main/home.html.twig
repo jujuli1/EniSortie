@@ -3,10 +3,28 @@
 {% block body %}
     <h1>Viens on sort !</h1>
 
+
+    {% if not app.user %}
+    <a class="seco" href="{{ path('app_login') }}">Se connecter</a>
+
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+
+        <div class="partadmin">
+            <p class="areuadmin">Vous etes un administrateur ? </p>
+            <a href="{{ path('app_admin') }}">cliquez ici </a>
+        </div>
+
+    {% endif %}
+
+
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
     {% if app.user %}
         <div class="mb-3">
-            Bienvenido {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
-
+           <p class="bienvenue">Bienvenido {{ app.user.userIdentifier }}</p>
+            <a class="deco" href="{{ path('app_logout') }}">Se déconnecter</a>
         </div>
     {% endif %}
 {% endblock %}

@@ -3,14 +3,19 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class MainController extends AbstractController
 {
     #[Route('/home', name: 'main_home')]
-    public function index(): Response
+    public function index(Security $security): Response
     {
+
+       // $user = $security->getUser();
+      //  $idUser = $user->getId();
+
         return $this->render('main/home.html.twig');
     }
 

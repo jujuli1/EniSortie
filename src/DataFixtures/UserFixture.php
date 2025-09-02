@@ -31,7 +31,6 @@ $user = new User();
 
 
 
-    //hachage password
 
 
     $user->setRoles(['ROLE_USER']);
@@ -47,7 +46,7 @@ $manager->persist($user);
         $user->setEmail('ange@test.com' );
         $user->setPassword($hash);
 
-        //hachage password
+
 
 
         $user->setRoles(['ROLE_USER']);
@@ -62,12 +61,9 @@ $manager->persist($user);
         $user->setName('Julien');
         $user->setLastname('Lef');
         $user->setEmail('julien@test.com' );
+        $user->setRoles(['ROLE_ADMIN']);
         $user->setPassword($hash);
 
-        //hachage password
-
-        $hash = $this->passwordHasher->hashPassword($user, 'test'.$i);
-        $user->setRoles(['ROLE_USER']);
 
         $manager->persist($user);
     }

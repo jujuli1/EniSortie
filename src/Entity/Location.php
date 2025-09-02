@@ -6,6 +6,7 @@ use App\Repository\LocationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
 class Location
@@ -16,9 +17,23 @@ class Location
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le champs nom est requis")]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: "le champs nom doit contenir au moins {{limit}} caractères.",
+        maxMessage: "le champs nom ne doit pas dépasser {{limit}} caractères."
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le champs rue est requis")]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: "le champs rue doit contenir au moins {{limit}} caractères.",
+        maxMessage: "le champs rue ne doit pas dépasser {{limit}} caractères."
+    )]
     private ?string $street = null;
 
     #[ORM\Column(nullable: true)]

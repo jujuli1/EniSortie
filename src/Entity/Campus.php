@@ -6,6 +6,7 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
 class Campus
@@ -16,6 +17,13 @@ class Campus
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le champs nom est requis")]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: "le champs nom doit contenir au moins {{limit}} caractères.",
+        maxMessage: "le champs nom ne doit pas dépasser {{limit}} caractères."
+    )]
     private ?string $name = null;
 
     /**
@@ -24,9 +32,16 @@ class Campus
     #[ORM\OneToMany(targetEntity: Outing::class, mappedBy: 'campus')]
     private Collection $outings;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'campus', orphanRemoval: true)]
+    private Collection $users;
+
     public function __construct()
     {
         $this->outings = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,6 +85,36 @@ class Campus
             // set the owning side to null (unless already changed)
             if ($outing->getCampus() === $this) {
                 $outing->setCampus(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setCampus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getCampus() === $this) {
+                $user->setCampus(null);
             }
         }
 

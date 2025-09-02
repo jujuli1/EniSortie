@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 class City
@@ -14,9 +15,23 @@ class City
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Le champs nom est requis")]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "le champs nom doit contenir au moins {{limit}} caractères.",
+        maxMessage: "le champs nom ne doit pas dépasser {{limit}} caractères."
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 10)]
+    #[Assert\NotBlank(message: "Le champs nom est requis")]
+    #[Assert\Length(
+        min: 2,
+        max: 10,
+        minMessage: "le champs code postale doit contenir au moins {{limit}} caractères.",
+        maxMessage: "le champs code postale ne doit pas dépasser {{limit}} caractères."
+    )]
     private ?string $postalCode = null;
 
     public function getId(): ?int

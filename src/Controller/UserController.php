@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -32,5 +33,21 @@ class UserController extends AbstractController
 
 
 
+    }
+
+    #[Route('detail/{id}', name: 'detail', requirements: ['id'=>'\d+'])]
+
+    public function detail(int $id, UserRepository $userRepository): Response
+    {
+        $user = $userRepository->find($id);
+
+        if(!$user){
+            throw $this->createNotFoundException('Oooppps! User not found !');
+        }
+
+
+        return $this->render('user/detail.html.twig', [
+            'user' => $user
+        ]);
     }
 }

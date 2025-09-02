@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,14 +27,17 @@ class User
     #[ORM\Column(length: 100)]
     private ?string $firstName = null;
 
+
     #[ORM\Column(length: 50)]
     private ?string $phoneNumber = null;
 
-    #[ORM\Column(length: 100)]
+ 
+    #[ORM\Column(length: 100, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
+
 
     #[ORM\Column]
     private ?bool $actif = null;
@@ -137,17 +145,20 @@ class User
         return $this;
     }
 
+
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    public function setRoles(array $roles): static
+    public function setRoles(array $role): static
     {
-        $this->roles = $roles;
+        $this->roles = $role;
+
 
         return $this;
     }
+
 
     public function getCampus(): ?Campus
     {
@@ -216,6 +227,34 @@ class User
         }
 
         return $this;
+    }
+
+
+
+
+
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function setPassword( string $password)
+    {
+
+        $this->password = $password;
+        return $this;
+
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
     }
 
 }

@@ -133,6 +133,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+
+
     public function isActif(): ?bool
     {
         return $this->actif;
@@ -244,17 +246,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setPassword( string $password)
-    {
 
-        $this->password = $password;
-        return $this;
-
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
 
 }

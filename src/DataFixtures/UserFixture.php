@@ -1,7 +1,7 @@
 <?php
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Entity\Uzer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +22,7 @@ public function load(ObjectManager $manager): void
 {
 
 for ($i = 0; $i < 1; $i++) {
-$user = new User();
+$user = new Uzer();
     $hash = $this->passwordHasher->hashPassword($user, 'root');
     $user->setName('yajuan ');
     $user->setLastname('H');
@@ -39,7 +39,7 @@ $manager->persist($user);
 }
 
     for ($i = 0; $i < 1; $i++) {
-        $user = new User();
+        $user = new Uzer();
         $hash = $this->passwordHasher->hashPassword($user, 'root');
         $user->setName('Ange');
         $user->setLastname('Mbang');
@@ -55,7 +55,7 @@ $manager->persist($user);
     }
 
     for ($i = 0; $i < 1; $i++) {
-        $user = new User();
+        $user = new Uzer();
 
         $hash = $this->passwordHasher->hashPassword($user, 'root');
         $user->setName('Julien');

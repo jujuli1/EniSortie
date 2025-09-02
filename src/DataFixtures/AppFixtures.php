@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+
 use App\Entity\Campus;
 use App\Entity\City;
 use App\Entity\Location;
@@ -10,10 +11,12 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
+
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+
         $this->addStatus($manager);
         $this->addCampus($manager);
         $this->addCity($manager);
@@ -107,5 +110,6 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
     }
+
 
 }

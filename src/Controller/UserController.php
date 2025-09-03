@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,14 +34,11 @@ class UserController extends AbstractController
 
     }
 
-    #[Route('/detail', name: 'detail')]
+    #[Route('/detailUser', name: 'detail')]
 
-    public function detail(UserRepository $userRepository, Security $security): Response
+    public function detail(): Response
     {
-        $userAuth = $security->getUser();
-        $id = $userAuth->getId();
-
-        $user = $userRepository->find($id);
+        $user = $this->getUser();
 
         if(!$user){
             throw $this->createNotFoundException('Oooppps! User not found !');
@@ -49,6 +48,19 @@ class UserController extends AbstractController
         return $this->render('user/detail.html.twig', [
             'user' => $user
         ]);
+    }
+
+    #[Route('/updateUser', name: 'update_user')]
+
+    public function updateUser(UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+
+        $user = $this->getUser();
+
+        if(!$user){
+            throw $this->createNotFoundException('Oooppps! User not found !');
+        }
+        return $this->render('user/update.html.twig');
     }
 
 

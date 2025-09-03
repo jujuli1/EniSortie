@@ -98,9 +98,42 @@ class AppFixtures extends Fixture
     {
         $cities = $manager->getRepository(City::class)->findAll();
         $faker = Factory::create('fr_FR');
+
+        $places = [
+            "Tour Eiffel",
+            "Cathédrale Notre-Dame",
+            "Musée du Louvre",
+            "Arc de Triomphe",
+            "Place de la Bourse",
+            "Pont du Gard",
+            "Mont Saint-Michel",
+            "Château de Chambord",
+            "Palais des Papes",
+            "Cité de Carcassonne",
+            "Vieux-Port de Marseille",
+            "Parc de la Tête d'Or",
+            "Capitole de Toulouse",
+            "Grand-Place de Lille",
+            "Cathédrale Saint-André de Bordeaux",
+            "Zoo de Beauval",
+            "Futuroscope",
+            "Puy du Fou",
+            "Parc du Thabor",
+            "Château des Ducs de Bretagne",
+            "Machines de l'île",
+            "Château de Chenonceau",
+            "Cathédrale de Reims",
+            "Fort Boyard",
+            "Place Bellecour",
+            "Palais Garnier",
+            "Pont Alexandre III",
+            "Jardin du Luxembourg",
+            "Basilique Notre-Dame de Fourvière",
+            "Cité des Sciences et de l’Industrie",
+        ];
         for($i = 0; $i <= 30; $i++) {
             $location = new Location();
-            $location->setName($faker->realText(maxNbChars: 50));
+            $location->setName($faker->randomElement($places));
             $location->setStreet($faker->streetAddress);
             $location->setLatitude($faker->latitude);
             $location->setLongitude($faker->longitude);

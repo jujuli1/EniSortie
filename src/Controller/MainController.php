@@ -26,16 +26,18 @@ final class MainController extends AbstractController
     }
 
     #[Route('/detailCity/{id}', name: 'app_detail_city')]
-    public function detailCity(UtilisateurRepository $utilisateurRepository, CampusRepository $campusRepository,OutingRepository $outingRepository, Security $security, CityRepository $cityRepository, int $id): Response
+    public function detailCity(OutingRepository $outingRepository, UtilisateurRepository $utilisateurRepository, CampusRepository $campusRepository, Security $security, CityRepository $cityRepository, int $id): Response
     {
 
-        $uzer = $utilisateurRepository->find($id);
+        $sortie = $outingRepository->find($id);
+        $uzer = $utilisateurRepository->findBy(['campus' => $id]);
         $campus = $campusRepository->find($id);
         $outing= $outingRepository->find($id);
 
 
         return $this->render('user/detailCity.html.twig', [
 
+            'sortie' => $sortie,
             'user' => $uzer,
             'outing' => $outing,
             'campus' => $campus,

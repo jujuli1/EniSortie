@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    <title>{% block title %}Profile{% endblock %}</title>
+{% endblock %}
+
+{% block body %}
+    <h1>Profile de {{ user.firstname }}</h1>
+
+    <div class="user-details">
+
+        <p>Prénom: {{ user.firstName }}</p>
+        <br>
+        <p>Nom: {{ user.lastName }}</p>
+        <br>
+        <p>Téléphone: {{ user.phoneNumber }}</p>
+        <br>
+        <p>Mail: {{ user.email }}</p>
+        <br>
+        <p>Actif: {{ user.actif }}</p>
+        <br>
+{#        <div>#}
+{#            <a class = "link_button" href="{{ path('',{'id':serie.id}) }}">Enregistrer</a>#}
+{#            <a class = "link_button" href="{{ path('',{'id':serie.id}) }}">Annuler</a>#}
+{#        </div>#}
+
+    </div>
+{% endblock %}

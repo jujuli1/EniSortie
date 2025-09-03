@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nata+Sans:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://kit.fontawesome.com/4d36bcb065.js" crossorigin="anonymous"></script>
+      {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <section class="outing-form-section">
+        <h2>Créer une sortie</h2>
+        {{ form_start(outingForm) }}
+        <div class="add-outing-form">
+            <div class="left-outing-form-fields">
+                {{ form_row(outingForm.name) }}
+                {{ form_row(outingForm.startDateTime) }}
+                {{ form_row(outingForm.registrationLimitDate) }}
+                {{ form_row(outingForm.nbMaxRegistration) }}
+                <div class="outing-duration-field">
+                    {{ form_row(outingForm.duration)}} minutes
+                </div>
+                <div class="outing-textarea-field">
+                    {{ form_row(outingForm.outingInfos) }}
+                </div>
+            </div>
+            <div class="right-outing-form-fields">
+                {{ form_row(outingForm.campus) }}
+                <div class="outing-form-town-field">
+                    <label for="city">Ville : </label>
+                    <select name="city" id="city"></select>
+                </div>
+                <div class="outing-form-location-field">
+                    {{ form_row(outingForm.location) }} <a href="{{ path('location_add') }}"><div class="outing-form-add-location-icon"><i class="fa-sharp fa-solid fa-plus"></i></div></a>
+                </div>
+                <div>
+                    <label for="street">Rue : </label>
+                    <input type="text" id="street" name="street">
+                </div>
+                <div>
+                    <label for="postalCode">Code postal : </label>
+                    <input type="text" id="postalCode" name="postalCode">
+                </div>
+                <div>
+                    <label for="latitude">Latitude : </label>
+                    <input type="text" id="latitude" name="latitude">
+                </div>
+                <div>
+                    <label for="longitude">Longitude : </label>
+                    <input type="text" id="longitude" name="longitude">
+                </div>
+            </div>
+        </div>
+        <div class="btn-outing-add">
+            <button type="submit">Enregistrer</button>
+            <button type="submit">Publier la sortie</button>
+            <button type="reset">Annuler</button>
+        </div>
+        {{ form_end(outingForm) }}
+    </section>
+{% endblock %}
+
+
+

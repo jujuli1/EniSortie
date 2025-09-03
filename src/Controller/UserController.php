@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -26,19 +27,18 @@ class UserController extends AbstractController
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): Response
+    public function logout(): void
     {
-
-        return $this->render('main/home.html.twig');
-
-
 
     }
 
-    #[Route('detail/{id}', name: 'detail', requirements: ['id'=>'\d+'])]
+    #[Route('/detail', name: 'detail')]
 
-    public function detail(int $id, UserRepository $userRepository): Response
+    public function detail(UserRepository $userRepository, Security $security): Response
     {
+        $userAuth = $security->getUser();
+        $id = $userAuth->getId();
+
         $user = $userRepository->find($id);
 
         if(!$user){

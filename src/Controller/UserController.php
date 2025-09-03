@@ -53,7 +53,7 @@ class UserController extends AbstractController
 
     #[Route('/updateUser', name: 'update_user')]
 
-    public function updateUser(UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function updateUser(Request $request, EntityManagerInterface $entityManager): Response
     {
 
         $user = $this->getUser();

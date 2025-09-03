@@ -6,8 +6,10 @@
         <li><a href="{{ path('main_home') }}">Home</a></li>
 
         {% if app.user %}
-            <li><a href="{{ path('detail') }}">Mon profile</a></li>
+
             <li><a href="{{ path('app_logout') }}">Logout</a></li>
+            <li><a href="{{ path('detail') }}">Mon profile</a></li>
+            <li><a href="{{ path('update_user') }}">Gérer mon profile</a></li>
             <li><a href="{{ path('sortie_add') }}">Add sortie</a></li>
 
 

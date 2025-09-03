@@ -61,8 +61,22 @@ class UserController extends AbstractController
         if(!$user){
             throw $this->createNotFoundException('Oooppps! User not found !');
         }
+
         $userForm = $this->createForm(UserFormType::class, $user);
         $userForm->handleRequest($request);
-        return $this->render('user/update.html.twig');
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'User profile updated !');
+            return $this->redirectToRoute('detail');
+        }
+
+        return $this->render('user/update.html.twig', [
+            'userForm' => $userForm
+        ]);
+
     }
 }

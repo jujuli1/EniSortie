@@ -6,11 +6,12 @@ use App\Entity\User;
 use App\Entity\Utilisateur;
 use App\Entity\Uzer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserFixture extends Fixture
+class UserFixture extends Fixture implements DependentFixtureInterface
 {
 
     private $passwordHasher;
@@ -24,11 +25,10 @@ class UserFixture extends Fixture
     public function load(ObjectManager $manager): void
     {
 
+        $campus = $manager->getRepository(Campus::class)->findOneBy(['name' => 'Nantes']);
+
         for ($i = 0; $i < 1; $i++) {
-            $user = new User();
-            $campus = new Campus();
-            $campus->setName('Nantes');
-            $manager->persist($campus);
+            $user = new Utilisateur();
             $hash = $this->passwordHasher->hashPassword($user, 'root');
             $user->setFirstName('yajuan ');
             $user->setLastname('H');
@@ -37,21 +37,13 @@ class UserFixture extends Fixture
             $user->setActif(true);
             $user->setCampus($campus);
             $user->setPassword($hash);
-
-
-
-
-
             $user->setRoles(['ROLE_USER']);
 
             $manager->persist($user);
         }
 
         for ($i = 0; $i < 1; $i++) {
-            $user = new User();
-            $campus = new Campus();
-            $campus->setName('Nantes');
-            $manager->persist($campus);
+            $user = new Utilisateur();
             $hash = $this->passwordHasher->hashPassword($user, 'root');
             $user->setFirstName('Ange');
             $user->setLastname('Mbang');
@@ -60,21 +52,13 @@ class UserFixture extends Fixture
             $user->setActif(true);
             $user->setCampus($campus);
             $user->setPassword($hash);
-
-
-
-
             $user->setRoles(['ROLE_USER']);
 
             $manager->persist($user);
         }
 
         for ($i = 0; $i < 1; $i++) {
-            $user = new User();
-
-            $campus = new Campus();
-            $campus->setName('Nantes');
-            $manager->persist($campus);
+            $user = new Utilisateur();
             $hash = $this->passwordHasher->hashPassword($user, 'root');
             $user->setFirstName('Julien');
             $user->setLastname('Lef');
@@ -89,51 +73,15 @@ class UserFixture extends Fixture
             $manager->persist($user);
         }
 
-        for ($i = 0; $i < 1; $i++) {
-            $user = new Utilisateur();
 
-            $hash = $this->passwordHasher->hashPassword($user, 'root');
-            $user->setFirstName('Julien');
-            $user->setLastname('Lef');
-            $user->setEmail('julien@test.com' );
-            $user->setPhoneNumber("0689583522");
-            $user->setActif(true);
-            $user->setRoles(['ROLE_ADMIN']);
-            $user->setPassword($hash);
-
-
-            $manager->persist($user);
-        }
-
-        for ($i = 0; $i < 1; $i++) {
-            $user = new Utilisateur();
-
-            $hash = $this->passwordHasher->hashPassword($user, 'root');
-            $user->setFirstName('Ange');
-            $user->setLastname('Mbang');
-            $user->setEmail('ange@test.com' );
-            $user->setPhoneNumber("0689583522");
-            $user->setActif(true);
-            $user->setPassword($hash);
-
-
-            $manager->persist($user);
-        }
-
-        for ($i = 0; $i < 1; $i++) {
-            $user = new Utilisateur();
-
-            $hash = $this->passwordHasher->hashPassword($user, 'root');
-            $user->setFirstName('yajuan ');
-            $user->setLastname('H');
-            $user->setEmail('yajuan@test.com' );
-            $user->setPhoneNumber("0689583522");
-            $user->setActif(true);
-            $user->setPassword($hash);
-
-            $manager->persist($user);
-        }
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            AppFixtures::class
+        ];
     }
 }

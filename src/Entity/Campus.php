@@ -33,9 +33,9 @@ class Campus
     private Collection $outings;
 
     /**
-     * @var Collection<int, User>
+     * @var Collection<int, Utilisateur>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'campus', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Utilisateur::class, mappedBy: 'campus', orphanRemoval: true)]
     private Collection $users;
 
     public function __construct()
@@ -92,14 +92,14 @@ class Campus
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, Utilisateur>
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(User $user): static
+    public function addUser(Utilisateur $user): static
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -109,7 +109,7 @@ class Campus
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeUser(Utilisateur $user): static
     {
         if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)

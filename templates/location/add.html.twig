@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <section class="outing-form-section">
+        <h2>Créer un lieu de sortie</h2>
+        <div class="add-location-form">
+            {{ form_start(locationForm) }}
+            {{ form_row(locationForm.city) }}
+            {{ form_row(locationForm.name) }}
+            {{ form_row(locationForm.street) }}
+            {{ form_row(locationForm.latitude) }}
+            {{ form_row(locationForm.longitude) }}
+            <div class="btn-outing-add">
+                <button type="submit">Créer</button>
+                <button type="reset">Annuler</button>
+            </div>
+            {{ form_end(locationForm) }}
+        </div>
+    </section>
+{% endblock %}
+
+
+
+

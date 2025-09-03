@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    <title>{% block title %}Profile{% endblock %}</title>
+    <title>Profile</title>
 {% endblock %}
 
 {% block body %}
@@ -17,12 +17,12 @@
         <br>
         <p>Mail: {{ user.email }}</p>
         <br>
-        <p>Actif: {{ user.actif }}</p>
+        <p>Campus: </p>
         <br>
-{#        <div>#}
-{#            <a class = "link_button" href="{{ path('',{'id':serie.id}) }}">Enregistrer</a>#}
-{#            <a class = "link_button" href="{{ path('',{'id':serie.id}) }}">Annuler</a>#}
-{#        </div>#}
+        <div>
+
+            <a href="{{ path('main_home') }}">Retour</a>
+        </div>
 
     </div>
 {% endblock %}

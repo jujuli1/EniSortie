@@ -93,7 +93,11 @@ class UserFixture extends Fixture
             $user = new Utilisateur();
 
             $hash = $this->passwordHasher->hashPassword($user, 'root');
+            $user->setFirstName('Julien');
+            $user->setLastname('Lef');
             $user->setEmail('julien@test.com' );
+            $user->setPhoneNumber("0689583522");
+            $user->setActif(true);
             $user->setRoles(['ROLE_ADMIN']);
             $user->setPassword($hash);
 
@@ -105,8 +109,11 @@ class UserFixture extends Fixture
             $user = new Utilisateur();
 
             $hash = $this->passwordHasher->hashPassword($user, 'root');
+            $user->setFirstName('Ange');
+            $user->setLastname('Mbang');
             $user->setEmail('ange@test.com' );
-            $user->setRoles(['ROLE_USER']);
+            $user->setPhoneNumber("0689583522");
+            $user->setActif(true);
             $user->setPassword($hash);
 
 
@@ -117,10 +124,12 @@ class UserFixture extends Fixture
             $user = new Utilisateur();
 
             $hash = $this->passwordHasher->hashPassword($user, 'root');
+            $user->setFirstName('yajuan ');
+            $user->setLastname('H');
             $user->setEmail('yajuan@test.com' );
-            $user->setRoles(['ROLE_USER']);
+            $user->setPhoneNumber("0689583522");
+            $user->setActif(true);
             $user->setPassword($hash);
-
 
             $manager->persist($user);
         }

@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: OutingRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Outing
 {
     #[ORM\Id]
@@ -30,7 +31,7 @@ class Outing
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "le champs Date et heure du début est requis")]
-    #[Assert\DateTime]
+    //#[Assert\DateTime]
     private ?\DateTime $startDateTime = null;
 
     #[ORM\Column]
@@ -40,7 +41,7 @@ class Outing
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank(message: "le champs Date Limite d'inscription est requis")]
-    #[Assert\GreaterThan(propertyPath: "startDateTime")]
+    #[Assert\LessThan(propertyPath: "startDateTime")]
     private ?\DateTime $registrationLimitDate = null;
 
     #[ORM\Column]
@@ -236,5 +237,6 @@ class Outing
 
         return $this;
     }
+
 
 }

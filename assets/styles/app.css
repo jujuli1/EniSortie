@@ -1,3 +1,83 @@
 body {
     background-color: skyblue;
 }
+
+/************************ style for outing form ****************************/
+.outing-form-section {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+            "wdth" 100;
+}
+
+.outing-form-section h2 {
+    font-size: 2rem;
+}
+
+.add-outing-form {
+    display: flex;
+    gap: 2rem;
+    align-content: center;
+}
+
+.outing-duration-field,
+.outing-form-location-field {
+   display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-outing-form input,
+.add-outing-form select {
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+.outing-form-town-field select {
+    width: 79%;
+}
+
+.btn-outing-add {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem;
+}
+
+.btn-outing-add button {
+    padding: 1rem;
+}
+
+.add-outing-form label {
+    align-self: center;
+}
+
+/*.outing-textarea-field {
+    display: flex;
+    align-items: center;
+}*/
+
+.outing-form-add-location-icon {
+    border: 3px solid black;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    padding: 0.2rem;
+}
+
+.outing-form-add-location-icon i {
+    color: black;
+    font-weight: bold;
+    font-size: ;
+}
+
+
+

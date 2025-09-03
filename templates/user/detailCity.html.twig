@@ -5,6 +5,10 @@
     <h1>détail sortie</h1>
 
     <p>{{ campus.name }}</p>
+
+    {% for user in campus.users %}
+    <p>{{ user.firstName }}</p>
+    {% endfor %}
 {% endblock %}
 
 {% block title %}

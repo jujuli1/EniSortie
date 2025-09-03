@@ -1,21 +1,38 @@
 {% extends 'base.html.twig' %}
 
+
+
+
 {% block body %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <h1>Viens on sort !</h1>
+
+
 
     {% if app.user %}
         <div class="mb-3">
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="areUAdmin">
+                    <p>Vous etes un administrateur ? </p>
+                    <a href="{{ path('app_admin') }}">Cliquez ici </a>
+                </div>
+
+
+            {% endif %}
             Bienvenido {{ app.user.userIdentifier }}
+
 
         </div>
     {% endif %}
 
     {% for campus in campuses %}
 
-        <ul>
+        <ul class="campusHome">
             <li><a href="{{ path('app_detail_city',{'id': campus.id} ) }}">{{ campus.name }}</a></li>
         </ul>
     {% endfor %}
+
+
 {% endblock %}
 
 {% block title %}<title>Home</title>{% endblock %}

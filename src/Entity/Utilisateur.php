@@ -45,30 +45,24 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $actif = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'utilisateurs')]
-    private ?self $campus = null;
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'campus')]
-    private Collection $utilisateurs;
+    #[ORM\ManyToOne(targetEntity: Campus::class, inversedBy: 'users')]
+    private ?Campus $campus = null;
 
     /**
      * @var Collection<int, Outing>
      */
-    #[ORM\OneToMany(targetEntity: Outing::class, mappedBy: 'utilisateur')]
+    #[ORM\OneToMany(targetEntity: Outing::class, mappedBy: 'organizer')]
     private Collection $outingOrganizer;
+
 
     /**
      * @var Collection<int, outing>
      */
-    #[ORM\ManyToMany(targetEntity: outing::class, inversedBy: 'utilisateurs')]
+    #[ORM\ManyToMany(targetEntity: Outing::class, inversedBy: 'participants')]
     private Collection $outingParticipants;
 
     public function __construct()
     {
-        $this->utilisateurs = new ArrayCollection();
         $this->outingOrganizer = new ArrayCollection();
         $this->outingParticipants = new ArrayCollection();
     }
@@ -193,47 +187,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCampus(): ?self
+    public function getCampus(): ?Campus
     {
         return $this->campus;
     }
 
-    public function setCampus(?self $campus): static
+    public function setCampus(?Campus $campus): static
     {
         $this->campus = $campus;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, self>
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
-
-    public function addUtilisateur(self $utilisateur): static
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs->add($utilisateur);
-            $utilisateur->setCampus($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(self $utilisateur): static
-    {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getCampus() === $this) {
-                $utilisateur->setCampus(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Outing>
@@ -243,27 +208,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->outingOrganizer;
     }
 
-    public function addOutingOrganizer(Outing $outingOrganizer): static
+    public function setOutingOrganizer(Collection $outingOrganizer): void
     {
-        if (!$this->outingOrganizer->contains($outingOrganizer)) {
-            $this->outingOrganizer->add($outingOrganizer);
-            $outingOrganizer->setUtilisateur($this);
-        }
-
-        return $this;
+        $this->outingOrganizer = $outingOrganizer;
     }
 
-    public function removeOutingOrganizer(Outing $outingOrganizer): static
-    {
-        if ($this->outingOrganizer->removeElement($outingOrganizer)) {
-            // set the owning side to null (unless already changed)
-            if ($outingOrganizer->getUtilisateur() === $this) {
-                $outingOrganizer->setUtilisateur(null);
-            }
-        }
 
-        return $this;
-    }
 
     /**
      * @return Collection<int, outing>

@@ -1,0 +1,7 @@
+{% form_theme form 'form/form_theme.html.twig' %}
+
+<h2>{% block title %} {% endblock %}</h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button>{% block buttonLabel %}{% endblock %}</button>
+{{ form_end(form) }}

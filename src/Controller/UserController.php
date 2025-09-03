@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,7 @@ class UserController extends AbstractController
 
     #[Route('/updateUser', name: 'update_user')]
 
-    public function updateUser(UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function updateUser(Request $request, EntityManagerInterface $entityManager): Response
     {
 
         $user = $this->getUser();
@@ -60,8 +61,22 @@ class UserController extends AbstractController
         if(!$user){
             throw $this->createNotFoundException('Oooppps! User not found !');
         }
-        return $this->render('user/update.html.twig');
+
+        $userForm = $this->createForm(UserFormType::class, $user);
+        $userForm->handleRequest($request);
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'User profile updated !');
+            return $this->redirectToRoute('detail');
+        }
+
+        return $this->render('user/update.html.twig', [
+            'userForm' => $userForm
+        ]);
+
     }
-
-
 }

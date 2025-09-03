@@ -27,6 +27,14 @@
             <a class="deco" href="{{ path('app_logout') }}">Se déconnecter</a>
         </div>
     {% endif %}
+
+    {% for campus in campus %}
+
+        <ul>
+            <li><a href="{{ path('app_detail_city', {'id':campus.id}) }}">{{ campus.name }}</a></li>
+        </ul>
+
+    {% endfor %}
 {% endblock %}
 
 {% block title %}

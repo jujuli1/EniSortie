@@ -1,7 +1,9 @@
 <?php
 namespace App\DataFixtures;
 
+use App\Entity\Campus;
 use App\Entity\User;
+use App\Entity\Utilisateur;
 use App\Entity\Uzer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -24,10 +26,16 @@ class UserFixture extends Fixture
 
         for ($i = 0; $i < 1; $i++) {
             $user = new User();
+            $campus = new Campus();
+            $campus->setName('Nantes');
+            $manager->persist($campus);
             $hash = $this->passwordHasher->hashPassword($user, 'root');
             $user->setFirstName('yajuan ');
             $user->setLastname('H');
             $user->setEmail('yajuan@test.com' );
+            $user->setPhoneNumber("0689583522");
+            $user->setActif(true);
+            $user->setCampus($campus);
             $user->setPassword($hash);
 
 
@@ -41,10 +49,16 @@ class UserFixture extends Fixture
 
         for ($i = 0; $i < 1; $i++) {
             $user = new User();
+            $campus = new Campus();
+            $campus->setName('Nantes');
+            $manager->persist($campus);
             $hash = $this->passwordHasher->hashPassword($user, 'root');
             $user->setFirstName('Ange');
             $user->setLastname('Mbang');
             $user->setEmail('ange@test.com' );
+            $user->setPhoneNumber("0689583522");
+            $user->setActif(true);
+            $user->setCampus($campus);
             $user->setPassword($hash);
 
 
@@ -58,11 +72,53 @@ class UserFixture extends Fixture
         for ($i = 0; $i < 1; $i++) {
             $user = new User();
 
+            $campus = new Campus();
+            $campus->setName('Nantes');
+            $manager->persist($campus);
             $hash = $this->passwordHasher->hashPassword($user, 'root');
             $user->setFirstName('Julien');
             $user->setLastname('Lef');
             $user->setEmail('julien@test.com' );
+            $user->setPhoneNumber("0689583522");
+            $user->setActif(true);
+            $user->setCampus($campus);
             $user->setRoles(['ROLE_ADMIN']);
+            $user->setPassword($hash);
+
+
+            $manager->persist($user);
+        }
+
+        for ($i = 0; $i < 1; $i++) {
+            $user = new Utilisateur();
+
+            $hash = $this->passwordHasher->hashPassword($user, 'root');
+            $user->setEmail('julien@test.com' );
+            $user->setRoles(['ROLE_ADMIN']);
+            $user->setPassword($hash);
+
+
+            $manager->persist($user);
+        }
+
+        for ($i = 0; $i < 1; $i++) {
+            $user = new Utilisateur();
+
+            $hash = $this->passwordHasher->hashPassword($user, 'root');
+            $user->setEmail('ange@test.com' );
+            $user->setRoles(['ROLE_USER']);
+            $user->setPassword($hash);
+
+
+            $manager->persist($user);
+        }
+
+        for ($i = 0; $i < 1; $i++) {
+            $user = new Utilisateur();
+
+            $hash = $this->passwordHasher->hashPassword($user, 'root');
+            $user->setEmail('yajuan@test.com' );
+            $user->setRoles(['ROLE_USER']);
             $user->setPassword($hash);
 
 

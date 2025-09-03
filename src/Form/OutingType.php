@@ -3,15 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Campus;
-use App\Entity\City;
 use App\Entity\Location;
 use App\Entity\Outing;
 use App\Entity\Status;
-use App\Entity\User;
 use App\Repository\CampusRepository;
-use App\Repository\CityRepository;
 use App\Repository\LocationRepository;
-use App\Repository\StatusRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;

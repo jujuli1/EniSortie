@@ -31,7 +31,7 @@ body {
 
 .outing-duration-field,
 .outing-form-location-field {
-   display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -76,8 +76,4 @@ body {
 .outing-form-add-location-icon i {
     color: black;
     font-weight: bold;
-    font-size: ;
 }
-
-
-

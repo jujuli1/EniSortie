@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: OutingRepository::class)]
-#[ORM\HasLifecycleCallbacks]
 class Outing
 {
     #[ORM\Id]
@@ -31,7 +30,7 @@ class Outing
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "le champs Date et heure du début est requis")]
-    //#[Assert\DateTime]
+    #[Assert\DateTime]
     private ?\DateTime $startDateTime = null;
 
     #[ORM\Column]
@@ -41,7 +40,7 @@ class Outing
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank(message: "le champs Date Limite d'inscription est requis")]
-    #[Assert\LessThan(propertyPath: "startDateTime")]
+    #[Assert\GreaterThan(propertyPath: "startDateTime")]
     private ?\DateTime $registrationLimitDate = null;
 
     #[ORM\Column]
@@ -63,26 +62,36 @@ class Outing
     #[ORM\JoinColumn(nullable: false)]
     private ?Status $status = null;
 
-    #[ORM\ManyToOne(inversedBy: 'outings')]
+   #[ORM\ManyToOne(inversedBy: 'outings')]
     private ?Campus $campus = null;
 
-    #[ORM\ManyToOne(inversedBy: 'outings')]
-    #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(inversedBy: 'outings')]
+  #[ORM\JoinColumn(nullable: false)]
     private ?Location $location = null;
 
-    #[ORM\ManyToOne(inversedBy: 'outingOrganizer')]
-    #[ORM\JoinColumn(nullable: false)]
+   #[ORM\ManyToOne(inversedBy: 'outingOrganizer')]
+   #[ORM\JoinColumn(nullable: false)]
     private ?User $organizer = null;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'outingsParticipants')]
+   #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'outingsParticipants')]
     private Collection $participants;
+
+   #[ORM\ManyToOne(inversedBy: 'outingOrganizer')]
+   private ?Utilisateur $utilisateur = null;
+
+   /**
+    * @var Collection<int, Utilisateur>
+    */
+   #[ORM\ManyToMany(targetEntity: Utilisateur::class, mappedBy: 'outingParticipants')]
+   private Collection $utilisateurs;
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->utilisateurs = new ArrayCollection();
     }
 
 
@@ -238,5 +247,43 @@ class Outing
         return $this;
     }
 
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Utilisateur>
+     */
+    public function getUtilisateurs(): Collection
+    {
+        return $this->utilisateurs;
+    }
+
+    public function addUtilisateur(Utilisateur $utilisateur): static
+    {
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs->add($utilisateur);
+            $utilisateur->addOutingParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateur $utilisateur): static
+    {
+        if ($this->utilisateurs->removeElement($utilisateur)) {
+            $utilisateur->removeOutingParticipant($this);
+        }
+
+        return $this;
+    }
 
 }

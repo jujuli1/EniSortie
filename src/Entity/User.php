@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: "app_user")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -255,7 +256,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+
     }
 
     public function getUserIdentifier(): string

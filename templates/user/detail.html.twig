@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    <title>Profile</title>
+{% endblock %}
+
+{% block body %}
+    <h1>Profile de {{ user.firstname }}</h1>
+
+    <div class="user-details">
+
+        <p>Prénom: {{ user.firstName }}</p>
+        <br>
+        <p>Nom: {{ user.lastName }}</p>
+        <br>
+        <p>Téléphone: {{ user.phoneNumber }}</p>
+        <br>
+        <p>Mail: {{ user.email }}</p>
+        <br>
+        <p>Campus: </p>
+        <br>
+        <div>
+
+            <a href="{{ path('main_home') }}">Retour</a>
+        </div>
+
+    </div>
+{% endblock %}

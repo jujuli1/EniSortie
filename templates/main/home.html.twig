@@ -5,12 +5,19 @@
 
     {% if app.user %}
         <div class="mb-3">
-            Bienvenido {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+            Bienvenido {{ app.user.userIdentifier }}
 
         </div>
     {% endif %}
+
+    {% for campus in campuses %}
+
+        <ul>
+            <li><a href="{{ path('app_detail_city',{'id': campus.id} ) }}">{{ campus.name }}</a></li>
+        </ul>
+    {% endfor %}
 {% endblock %}
 
 {% block title %}
-
+    <title>Home</title>
 {% endblock %}

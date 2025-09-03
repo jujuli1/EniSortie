@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,8 +61,8 @@ class UserController extends AbstractController
         if(!$user){
             throw $this->createNotFoundException('Oooppps! User not found !');
         }
+        $userForm = $this->createForm(UserFormType::class, $user);
+        $userForm->handleRequest($request);
         return $this->render('user/update.html.twig');
     }
-
-
 }

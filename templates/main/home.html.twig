@@ -2,6 +2,13 @@
 
 {% block body %}
     <h1>Viens on sort !</h1>
+
+    {% if app.user %}
+        <div class="mb-3">
+            Bienvenido {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block title %}

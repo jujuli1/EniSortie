@@ -17,12 +17,12 @@
         <br>
         <p>Mail: {{ user.email }}</p>
         <br>
-        <p>Actif: {{ user.actif }}</p>
+        <p>Campus: </p>
         <br>
-{#        <div>#}
-{#            <a class = "link_button" href="{{ path('',{'id':serie.id}) }}">Enregistrer</a>#}
-{#            <a class = "link_button" href="{{ path('',{'id':serie.id}) }}">Annuler</a>#}
-{#        </div>#}
+        <div>
+            <a class = "link_button" href="{{ path('update_user') }}">Enregistrer</a>
+            <a href="{{ path('main_home') }}">Retour</a>
+        </div>
 
     </div>
 {% endblock %}

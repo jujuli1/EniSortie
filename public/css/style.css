@@ -1,0 +1,36 @@
+body{
+    background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+.mb-3{
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 55px;
+    align-items: center;
+}
+
+.authForm{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.partadmin{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.bienvenue{
+    font-size: 30px;
+}

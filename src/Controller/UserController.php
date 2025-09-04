@@ -72,6 +72,11 @@ class UserController extends AbstractController
             $password = $passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($password);
 
+            $image = $userForm->get('userImage')->getData();
+            $newFileName = uniqid() . '.' . $image->guessExtension();
+            $image->move($this->getParameter('userImages_dir'), $newFileName);
+            $user->setUserImage($newFileName);
+
             $entityManager->persist($user);
             $entityManager->flush();
 

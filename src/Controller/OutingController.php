@@ -43,21 +43,12 @@ final class OutingController extends AbstractController
         StatusRepository $statusRepository,
         LocationRepository $locationRepository,
         CampusRepository $campusRepository,
-        int $statusId = null,
+        $status = null,
         int $locationId = null,
         int $campusId = null
     ): Response
     {
         $outing = new Outing();
-
-        if($statusId) {
-            // Retrieve the status by its identifier, check if the status isn't retrieved to throw a created not found exception and set the outing with the status retrieved
-            $status = $statusRepository->find($statusId);
-            if(!$status) {
-                throw $this->createNotFoundException('Le status n\'existe pas');
-            }
-            $outing->setStatus($status);
-        }
 
          if($locationId) {
              // Retrieve the location by its identifier, check if the location isn't retrieved to throw a created not found exception and set the outing with the location retrieved
@@ -83,6 +74,18 @@ final class OutingController extends AbstractController
         $outingForm = $this->createForm(OutingType::class, $outing);
         $outingForm->handleRequest($request);
         if($outingForm->isSubmitted() && $outingForm->isValid()) {
+            // Retrieved the value of the button clicked and set the status label according the button value
+            $action = $request->request->get('action');
+            if ($action === 'save') {
+                $status = $statusRepository->findOneBy(['label' => 'Créée']);
+            } elseif ($action === 'publish') {
+                $status = $statusRepository->findOneBy(['label' => 'Ouverte']);
+            }
+
+            if (!$status) {
+                throw $this->createNotFoundException("Le statut demandé n'existe pas.");
+            }
+            $outing->setStatus($status);
             $outing->setOrganizer($this->getUser());
             $entityManager->persist($outing);
             $entityManager->flush();
@@ -150,6 +153,7 @@ final class OutingController extends AbstractController
 
 
     }
+
 
 
 }

@@ -9,6 +9,8 @@
 
     <div class="user-details">
 
+        <img style="width: 200px;" src="{{ 'userImages/' ~ user.userImage }}"
+             alt="image de {{ user.firstname }}">
         <p>Prénom: {{ user.firstName }}</p>
         <br>
         <p>Nom: {{ user.lastName }}</p>
@@ -17,7 +19,7 @@
         <br>
         <p>Mail: {{ user.email }}</p>
         <br>
-        <p>Campus: </p>
+        <p>Campus: {{ user.campus.name }}</p>
         <br>
         <div>
 

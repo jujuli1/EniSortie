@@ -1,14 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-    <div>
-        <a class = "link_button" href="{{ path('update_user') }}">Enregistrer</a>
-        <a href="{{ path('main_home') }}">Annuler</a>
-    </div>
-{% endblock %}
-
-{% block title %}
-
+    {% embed 'form/form_template.html.twig' with {form : userForm} %}
+        {% block title %} Update user profile !{% endblock %}
+        {% block buttonLabel %} Enregistrer {% endblock %}
+    {% endembed %}
+    <a href="{{ path('detail') }}">Annuler</a>
 {% endblock %}
 

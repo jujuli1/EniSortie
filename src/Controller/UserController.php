@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
-use App\Repository\UserRepository;
+use App\Form\UserFormType;
+use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -52,7 +54,7 @@ class UserController extends AbstractController
 
     #[Route('/updateUser', name: 'update_user')]
 
-    public function updateUser(UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function updateUser(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
 
         $user = $this->getUser();
@@ -60,8 +62,30 @@ class UserController extends AbstractController
         if(!$user){
             throw $this->createNotFoundException('Oooppps! User not found !');
         }
-        return $this->render('user/update.html.twig');
+
+        $userForm = $this->createForm(UserFormType::class, $user);
+        $userForm->handleRequest($request);
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+
+            $plainPassword = $userForm->get('plainPassword')->getData();
+            $password = $passwordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($password);
+
+            $image = $userForm->get('userImage')->getData();
+            $newFileName = uniqid() . '.' . $image->guessExtension();
+            $image->move($this->getParameter('userImages_dir'), $newFileName);
+            $user->setUserImage($newFileName);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'User profile updated !');
+            return $this->redirectToRoute('detail');
+        }
+
+        return $this->render('user/update.html.twig', [
+            'userForm' => $userForm
+        ]);
     }
-
-
 }

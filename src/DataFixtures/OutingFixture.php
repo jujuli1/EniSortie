@@ -17,6 +17,7 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+
 class OutingFixture extends Fixture implements DependentFixtureInterface
 {
 
@@ -30,80 +31,64 @@ class OutingFixture extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager ): void
     {
 
-        $campus = $manager->getRepository(Campus::class)->findOneBy(['name' => 'Nantes']);
+        $this->addOutings($manager);
 
-        for ($i = 0; $i < 20; $i++) {
-            $user= new Utilisateur();
-            $sortie = new Outing();
-            $status = new Status();
-            $location = new Location();
-            $city = new City();
+    }
 
-            $status->setLabel('ended');
-            $manager->persist($status);
+        public function addOutings(ObjectManager $manager): void
+    {
+        $faker = Factory::create('fr_FR');
 
-            $sortie ->setLocation($location);
+        $statuses = $manager->getRepository(Status::class)->findAll();
+        $campuses = $manager->getRepository(Campus::class)->findAll();
+        $locations = $manager->getRepository(Location::class)->findAll();
+        $users = $manager->getRepository(Utilisateur::class)->findAll();
 
-            $manager->persist($status);
+        for ($i = 0; $i < 200; $i++) {
+            $outing = new Outing();
 
-            $city->setName('tagranmer');
-            $city->setPostalCode('91000');
-            $manager->persist($city);
+            // Set the name of the outing
+            $outing->setName($faker->sentence(3));
 
+            // Dates
+            $startDate = $faker->dateTimeBetween('+1 days', '+11 months');
+            $outing->setStartDateTime($startDate);
 
-            $location->setName('tamer');
-            $location->setCity($city);
-            $location->setStreet('rue de ton pere');
-            $manager->persist($location);
+            $outing->setDuration($faker->numberBetween(30, 480));
 
-            $mail= 'user'. $i . '@test.com';
-            $hash = $this->passwordHasher->hashPassword($user, 'root');
+            $registrationLimitDate = (clone $startDate)->modify('-' . rand(1, 30) . ' days');
+            $outing->setRegistrationLimitDate($registrationLimitDate);
 
+            // Nb inscriptions
+            $outing->setNbMaxRegistration($faker->numberBetween(5, 50));
 
-            $user->setFirstName('Firstname' . $i);
-            $user->setLastname('lastname' . $i);
-            $user->setEmail($mail );
-            $user->setPhoneNumber("0689583522" . $i);
-            $user->setActif(true);
-            $user->setCampus($campus);
-            $user->setRoles(['ROLE_ADMIN']);
-            $user->setPassword($hash);
-            $manager->persist($user);
+            // Infos
+            $outing->setOutingInfos($faker->paragraph(3));
 
-            $this->addReference('status_ended'. $i, $status);
+            // Relations
+            $outing->setStatus($faker->randomElement($statuses));
+            $outing->setCampus($faker->randomElement($campuses));
+            $outing->setLocation($faker->randomElement($locations));
+            $outing->setOrganizer($faker->randomElement($users));
 
+            // Add some user
+            $nbParticipants = $faker->numberBetween(1, 3);
+            $participants = $faker->randomElements($users, $nbParticipants);
+            foreach ($participants as $participant) {
+                $outing->addParticipant($participant);
+            }
 
-
-            $sortie->setName('Outing' . $i);
-            $sortie->setStartDateTime(new \DateTime());
-            $sortie->setDuration(20);
-            $sortie->setRegistrationLimitDate(new \DateTime());
-            $sortie->setNbMaxRegistration(10);
-            $sortie->setOutingInfos('espaces vert' .$i);
-            $sortie->setStatus($status);
-            $sortie->setLocation($location);
-            $sortie->setOrganizer($user);
-
-            $manager->persist($sortie);
-
-
+            $manager->persist($outing);
         }
-
-
-        // $product = new Product();
-        // $manager->persist($product);
 
         $manager->flush();
     }
 
-
     public function getDependencies(): array
     {
-        return [
-            AppFixtures::class
-        ];
+       return [
+         AppFixtures::class,
+         UserFixture::class
+       ];
     }
 }
-
-
-

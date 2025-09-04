@@ -1,16 +1,12 @@
-body {
+/*body {
     background-color: skyblue;
-}
+}*/
 
 /************************ style for outing form ****************************/
-.outing-form-section {
-    width: 100vw;
-    margin: 0;
-    padding: 0;
+.outing-form-section,
+.list-outing-page-section {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     font-family: "Roboto", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
@@ -19,27 +15,41 @@ body {
             "wdth" 100;
 }
 
-.outing-form-section h2 {
+.outing-form-section {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.outing-form-section h2,
+.list-outing-page-section h2 {
     font-size: 2rem;
 }
 
-.add-outing-form {
+.add-outing-form,
+.search-form {
     display: flex;
     gap: 2rem;
     align-content: center;
 }
 
 .outing-duration-field,
-.outing-form-location-field {
+.outing-form-location-field,
+.search-date{
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
 }
 
 .add-outing-form input,
 .add-outing-form select,
 .add-location-form input,
-.add-location-form select {
+.add-location-form select,
+.search-form input,
+.search-form select {
     padding: 0.5rem;
     margin: 0.5rem;
 }
@@ -79,3 +89,24 @@ body {
     color: black;
     font-weight: bold;
 }
+
+
+
+
+/******************************************** Outing list page *************************************/
+.search-form {
+    justify-content: space-between;
+
+}
+
+.search-btn button{
+    padding: 2rem;
+}
+
+.list-outing-page-section table {
+    margin-top: 2rem;
+
+}
+
+
+

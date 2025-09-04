@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\City;
 use App\Entity\Location;
 use App\Entity\Outing;
-use App\Entity\Utilisateur;
+use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
@@ -18,24 +18,41 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/sortie', name: 'sortie_')]
-/*
- * Method to create an outing
- *
- * @param EntityManagerInterface $entityManager, UserRepository $userRepository,
-  CampusRepository $campusRepository,
-  LocationRepository $locationRepository
- *
- * @return a Response
- */
 final class OutingController extends AbstractController
 {
-    #[Route('/list', name: 'sortie_list')]
-    public function listOutings() {
+    #[Route('/list', name: 'list')]
+    public function listOutings(
+        Request $request,
+        OutingRepository $outingRepository
+    ): Response {
+        // Create a search form
+        $searchForm = $this->createForm(OutingSearchType::class);
+        $searchForm->handleRequest($request);
+
+        // Retrieve outings with filter
+        $filters = $searchForm->getData() ?? [];
+
+        // Retrieve the connected user
+        $user = $this->getUser();
+        $outings = $outingRepository->search($filters);
+
+        return $this->render('outing/list.html.twig', [
+            'outings' => $outings,
+            'searchForm' => $searchForm,
+        ]);
 
     }
 
 
-
+    /*
+     * Method to create an outing
+     *
+     * @param EntityManagerInterface $entityManager, UserRepository $userRepository,
+     CampusRepository $campusRepository,
+     LocationRepository $locationRepository
+     *
+     * @return a Response
+     */
     #[Route('/add', name: 'add')]
     public function createOuting(
         Request $request,
@@ -97,60 +114,6 @@ final class OutingController extends AbstractController
         return $this->render('outing/add.html.twig', [
             "outingForm" => $outingForm
         ]);
-
-    }
-    #[Route('/inscription/{id}', name: 'app_inscription')]
-    public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
-    {
-
-
-
-        ///user connecté
-        $user = $this->getUser();
-
-        $sortie = $outingRepository->find($id);
-
-        //verifier le nb max de participant et si la date limite d'inscrition nest pas depasser
-
-        $date = new \DateTime('now');
-        $dateInscription = $sortie->getRegistrationLimitDate();
-        $nbParticipants = count($sortie->getParticipants());
-        $sortieMax = $sortie->getNbMaxRegistration();
-
-        if($nbParticipants >= $sortieMax ) {
-            return $this->render('main/failed_registration.html.twig', [
-                'max' => $sortieMax,
-                'errorMax' => 'Nombre de participant maximal atteint !',
-                'errorDate' => ' '
-            ]);
-        }
-
-        if( $dateInscription > $date ) {
-            return $this->render('main/failed_registration.html.twig', [
-                'max' => $sortieMax,
-                'errorMax' => '',
-                'errorDate' => 'La date limite a été dépasser ... '
-            ]);
-        }
-
-        $sortie->addParticipant($user);
-
-        //dd($sortie);
-        $emi->persist($sortie);
-        $emi->flush();
-
-
-
-        $this->addFlash('success', 'Inscription réussie !');
-
-        return $this->render('main/campus_inscription.html.twig', [
-            "user" => $user,
-            'sortie' => $sortie,
-            'max' => $sortieMax,
-
-
-        ]);
-
 
     }
 

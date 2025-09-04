@@ -13,24 +13,31 @@
         <div class="mb-3">
             {% if is_granted('ROLE_ADMIN') %}
                 <div class="areUAdmin">
+                    <a href="{{ path('sortie_add') }}">Ajouter des sorties</a>
                     <p>Vous etes un administrateur ? </p>
                     <a href="{{ path('app_admin') }}">Cliquez ici </a>
+                    <a href="{{ path('main_inscription') }}">S'inscrire à une sortie</a>
+
+
                 </div>
 
 
+
+
+
+
             {% endif %}
+
+            {% if is_granted('ROLE_USER') %}
+
+                <a href="{{ path('main_inscription') }}">S'inscrire à une sortie</a>
+                {% endif %}
             Bienvenido {{ app.user.userIdentifier }}
 
 
         </div>
     {% endif %}
 
-    {% for campus in campuses %}
-
-        <ul class="campusHome">
-            <li><a href="{{ path('app_detail_city',{'id': campus.id} ) }}">{{ campus.name }}</a></li>
-        </ul>
-    {% endfor %}
 
 
 {% endblock %}

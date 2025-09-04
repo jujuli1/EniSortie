@@ -4,26 +4,38 @@ namespace App\DataFixtures;
 
 
 use App\Entity\Campus;
+use App\Entity\City;
 use App\Entity\Location;
 use App\Entity\Outing;
 use App\Entity\Status;
 use App\Entity\Utilisateur;
+use App\Repository\OutingRepository;
+use App\Repository\StatusRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 class OutingFixture extends Fixture implements DependentFixtureInterface
 {
 
+    private $passwordHasher;
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
 
-    public function load(ObjectManager $manager): void
+
+    public function load(ObjectManager $manager ): void
     {
 
          $this->addOutings($manager);
-    }
 
-    public function addOutings(ObjectManager $manager): void
+}
+
+        public function addOutings(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
 
@@ -71,7 +83,6 @@ class OutingFixture extends Fixture implements DependentFixtureInterface
 
         $manager->flush();
     }
-
 
     public function getDependencies(): array
     {

@@ -31,9 +31,9 @@ class OutingFixture extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager ): void
     {
 
-         $this->addOutings($manager);
+        $this->addOutings($manager);
 
-}
+    }
 
         public function addOutings(ObjectManager $manager): void
     {

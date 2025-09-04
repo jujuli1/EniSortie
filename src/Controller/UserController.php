@@ -30,7 +30,7 @@ class UserController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
+    #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
 
@@ -46,6 +46,25 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('Oooppps! User not found !');
         }
 
+
+        return $this->render('user/detail.html.twig', [
+            'user' => $user
+        ]);
+    }
+
+    #[Route('/afficheUser/{id}', name: 'afficheUser', requirements: ['id' => '\d+'])]
+
+    public function afficheUser(int $id, UtilisateurRepository $repository): Response
+    {
+        $userConnected = $this->getUser();
+        if(!$userConnected) {
+            return $this->redirectToRoute('app_login');
+        }
+        $user = $repository->find($id);
+
+        if(!$user){
+            throw $this->createNotFoundException('Oooppps! User not found !');
+        }
 
         return $this->render('user/detail.html.twig', [
             'user' => $user

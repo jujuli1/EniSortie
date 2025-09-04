@@ -61,6 +61,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Outing::class, inversedBy: 'participants')]
     private Collection $outingParticipants;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $userImage = null;
+
     public function __construct()
     {
         $this->outingOrganizer = new ArrayCollection();
@@ -235,6 +238,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeOutingParticipant(outing $outingParticipant): static
     {
         $this->outingParticipants->removeElement($outingParticipant);
+
+        return $this;
+    }
+
+    public function getUserImage(): ?string
+    {
+        return $this->userImage;
+    }
+
+    public function setUserImage(string $userImage): static
+    {
+        $this->userImage = $userImage;
 
         return $this;
     }

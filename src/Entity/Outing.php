@@ -75,7 +75,7 @@ class Outing
     /**
      * @var Collection<int, Utilisateur>
      */
-   #[ORM\ManyToMany(targetEntity: Utilisateur::class, mappedBy: 'outingsParticipants')]
+   #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'outingParticipants')]
     private Collection $participants;
 
 

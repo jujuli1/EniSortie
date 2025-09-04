@@ -3,11 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\City;
+use App\Entity\Utilisateur;
+use App\Form\CampusSearchType;
+
+use App\Form\RegistrationFormType;
 use App\Repository\CampusRepository;
 use App\Repository\CityRepository;
 use App\Repository\OutingRepository;
-use App\Repository\UserRepository;
+
 use App\Repository\UtilisateurRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,28 +24,53 @@ final class MainController extends AbstractController
     #[Route('/', name: 'main_home')]
     public function home(CampusRepository $campusRepository): Response
     {
-        $campus = $campusRepository->findAll();
 
+        $campus = $campusRepository->findAll();
         return $this->render('main/home.html.twig', [
-            'campuses' => $campus,
+
         ]);
     }
 
-    #[Route('/detailCity/{id}', name: 'app_detail_city')]
-    public function detailCity(OutingRepository $outingRepository, UtilisateurRepository $utilisateurRepository, CampusRepository $campusRepository, Security $security, CityRepository $cityRepository, int $id): Response
+    #[Route('/inscription', name: 'main_inscription')]
+    public function campus(OutingRepository $outingRepository, Request $request): Response
     {
 
-        $sortie = $outingRepository->find($id);
-        $uzer = $utilisateurRepository->findBy(['campus' => $id]);
+
+
+        $sortie = $outingRepository -> findAll();
+
+
+
+
+
+        //verifier le nb max de participant et si la date limite d'inscrition nest pas depasser
+
+
+
+
+        return $this->render('main/campus_inscription.html.twig', [
+            'sortie' => $sortie,
+
+
+
+        ]);
+    }
+
+
+
+    #[Route('/detailCity/{id}', name: 'app_detail_city')]
+    public function detailCity(OutingRepository $outingRepository,  CampusRepository $campusRepository, int $id): Response
+    {
         $campus = $campusRepository->find($id);
-        $outing= $outingRepository->find($id);
+        $outings = $outingRepository->findAll();
+
+
+
 
 
         return $this->render('user/detailCity.html.twig', [
 
-            'sortie' => $sortie,
-            'user' => $uzer,
-            'outing' => $outing,
+            'outings' => $outings,
             'campus' => $campus,
         ]);
     }

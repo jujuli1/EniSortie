@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+
+
+
+
+    {% for sortie in sortie %}
+
+        <ul class="sortieHome">
+            <li><a href="{{ path('sortie_app_inscription',{'id': sortie.id} ) }}">{{ sortie.name }}</a></li>
+        </ul>
+    {% endfor %}
+
+
+
+{% endblock %}
+

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="list-outing-page-section">
+        <h2>Filtrer les sorties</h2>
+        <div class="search-form">
+            <div>
+                {{ form_start(searchForm, {'attr': {'id': 'search-form'}}) }}
+                {{ form_row(searchForm.campus, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                {{ form_row(searchForm.NameContentWord, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                <div class="search-date">
+                    {{ form_row(searchForm.startDate, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                    {{ form_row(searchForm.endDate, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                </div>
+            </div>
+            <div>
+                {{ form_row(searchForm.isOrganizer, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                {{ form_row(searchForm.isParticipant, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                {{ form_row(searchForm.isNotParticipant, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                {{ form_row(searchForm.isPassed, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+            </div>
+            <div class="search-btn">
+                    <button type="submit">Rechercher</button>
+                </div>
+                {{ form_end(searchForm) }}
+        </div>
+
+        <table id="outing-table" border="1" cellpadding="10" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>clotûre</th>
+                <th>nbInscrits/places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for outing in outings %}
+                <tr>
+                    <td>{{ outing.name }}</td>
+                    <td>{{ outing.startDateTime|date('d/m/Y H:i') }}</td>
+                    <td>{{ outing.registrationlimitDate|date('d/m/Y') }}</td>
+                    <td>{{ outing.participants|length }}/{{ outing.nbMaxRegistration }}</td>
+                    <td>{{ outing.status.label }}</td>
+                    {% if app.user and app.user.roles == ['ROLE_PARTICIPANT'] %}
+                            <td></td>
+                    {% else %}
+                        <td>X</td>
+                    {% endif %}
+
+                    <td>{{ outing.organizer.firstName }}</td>
+                    <td>
+                        <a href="">afficher</a>
+                        <a href="">Se désister</a>
+                        <a href="">S'inscrire</a>
+                        <a href="">Publier</a>
+                        <a href="">Annuler</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucune sortie trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% block javascripts %}
+{{ parent() }}
+<script {{ asset('js/outing.js') }}></script>
+{% endblock %}
+
+{% endblock %}

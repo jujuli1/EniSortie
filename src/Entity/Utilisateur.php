@@ -58,7 +58,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, outing>
      */
-    #[ORM\ManyToMany(targetEntity: Outing::class, inversedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Outing::class, mappedBy: 'participants')]
     private Collection $outingParticipants;
 
     public function __construct()

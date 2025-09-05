@@ -9,7 +9,7 @@
 
     <div class="user-details">
 
-        <img style="width: 200px;" src="{{ 'userImages/' ~ user.userImage }}"
+        <img style="width: 200px;" src="{{ asset('userImages/' ~ user.userImage) }}"
              alt="image de {{ user.firstname }}">
         <p>Prénom: {{ user.firstName }}</p>
         <br>

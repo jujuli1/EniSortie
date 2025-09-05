@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name: 'sortie_')]
 final class OutingController extends AbstractController
@@ -53,6 +54,7 @@ final class OutingController extends AbstractController
      *
      * @return a Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/add', name: 'add')]
     public function createOuting(
         Request $request,
@@ -114,6 +116,93 @@ final class OutingController extends AbstractController
         return $this->render('outing/add.html.twig', [
             "outingForm" => $outingForm
         ]);
+
+    }
+    #[IsGranted('ROLE_USER')]
+    #[Route('/inscription/{id}', name: 'app_inscription')]
+    public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+    {
+
+
+
+        ///user connecté
+        $user = $this->getUser();
+
+        $sortie = $outingRepository->find($id);
+
+
+        $date = new \DateTime('now');
+        $dateInscription = $sortie->getRegistrationLimitDate();
+        $nbParticipants = count($sortie->getParticipants());
+        $sortieMax = $sortie->getNbMaxRegistration();
+
+        if($nbParticipants >= $sortieMax ) {
+            return $this->render('main/failed_registration.html.twig', [
+                'max' => $sortieMax,
+                'errorMax' => 'Nombre de participant maximal atteint !',
+                'errorDate' => ' '
+            ]);
+        }
+
+        if( $dateInscription > $date ) {
+            return $this->render('main/failed_registration.html.twig', [
+                'max' => $sortieMax,
+                'errorMax' => '',
+                'errorDate' => 'La date limite a été dépasser ... '
+            ]);
+        }
+
+        $sortie->addParticipant($user);
+
+        //dd($sortie);
+
+
+        $emi->persist($sortie);
+        $emi->flush();
+
+
+        $this->addFlash('type', 'Vous etes inscrit ! Bravo !');
+
+
+        return $this->redirectToRoute('main_inscription', [
+            "user" => $user,
+            'sortie' => $sortie,
+            'max' => $sortieMax,
+
+
+
+
+
+        ]);
+
+
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/delete/{id}', name: 'app_delete')]
+public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+    {
+
+
+        // annuler la sortie
+
+        $participant = $this->getUser();
+        $sortie = $outingRepository->find($id);
+
+        $sortie->removeParticipant($participant);
+
+        if (!$participant) {
+            throw $this->createNotFoundException('Aucun uzer trouvée avec l\'ID : ' . $id);
+        }
+
+        $emi->flush();
+
+        return $this->render('main/campus_delete.html.twig', [
+
+        ]);
+
+
+
 
     }
 

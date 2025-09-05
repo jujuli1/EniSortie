@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class MainController extends AbstractController
 {
@@ -25,32 +26,23 @@ final class MainController extends AbstractController
     public function home(CampusRepository $campusRepository): Response
     {
 
-        $campus = $campusRepository->findAll();
+
         return $this->render('main/home.html.twig', [
 
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/inscription', name: 'main_inscription')]
     public function campus(OutingRepository $outingRepository, Request $request): Response
     {
-
-
-
         $sortie = $outingRepository -> findAll();
-
-
-
-
-
-        //verifier le nb max de participant et si la date limite d'inscrition nest pas depasser
 
 
 
 
         return $this->render('main/campus_inscription.html.twig', [
             'sortie' => $sortie,
-
 
 
         ]);

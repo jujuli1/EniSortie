@@ -11,11 +11,13 @@ use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
+use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name: 'sortie_')]
 /*
@@ -36,6 +38,7 @@ final class OutingController extends AbstractController
 
 
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/add', name: 'add')]
     public function createOuting(
         Request $request,
@@ -99,6 +102,7 @@ final class OutingController extends AbstractController
         ]);
 
     }
+    #[IsGranted('ROLE_USER')]
     #[Route('/inscription/{id}', name: 'app_inscription')]
     public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
@@ -110,7 +114,6 @@ final class OutingController extends AbstractController
 
         $sortie = $outingRepository->find($id);
 
-        //verifier le nb max de participant et si la date limite d'inscrition nest pas depasser
 
         $date = new \DateTime('now');
         $dateInscription = $sortie->getRegistrationLimitDate();
@@ -136,20 +139,53 @@ final class OutingController extends AbstractController
         $sortie->addParticipant($user);
 
         //dd($sortie);
+
+
         $emi->persist($sortie);
         $emi->flush();
 
 
+        $this->addFlash('type', 'Vous etes inscrit ! Bravo !');
 
-        $this->addFlash('success', 'Inscription réussie !');
 
-        return $this->render('main/campus_inscription.html.twig', [
+        return $this->redirectToRoute('main_inscription', [
             "user" => $user,
             'sortie' => $sortie,
             'max' => $sortieMax,
 
 
+
+
+
         ]);
+
+
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/delete/{id}', name: 'app_delete')]
+public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+    {
+
+
+        // annuler la sortie
+
+        $participant = $this->getUser();
+        $sortie = $outingRepository->find($id);
+
+        $sortie->removeParticipant($participant);
+
+        if (!$participant) {
+            throw $this->createNotFoundException('Aucun uzer trouvée avec l\'ID : ' . $id);
+        }
+
+        $emi->flush();
+
+        return $this->render('main/campus_delete.html.twig', [
+
+        ]);
+
+
 
 
     }

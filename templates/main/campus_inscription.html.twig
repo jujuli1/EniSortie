@@ -8,14 +8,27 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 
+    {% for label, messages in app.flashes %}
+        <div class="alert ">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
 
 
     {% for sortie in sortie %}
 
+
+
+
         <ul class="sortieHome">
             <li><a href="{{ path('sortie_app_inscription',{'id': sortie.id} ) }}">{{ sortie.name }}</a></li>
+
+            <li><a href="{{ path('sortie_app_delete',{'id': sortie.id} ) }}">Se desister</a></li>
         </ul>
     {% endfor %}
 

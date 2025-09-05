@@ -6,7 +6,6 @@ use App\Entity\City;
 use App\Entity\Utilisateur;
 use App\Form\CampusSearchType;
 
-use App\Form\RegistrationFormType;
 use App\Repository\CampusRepository;
 use App\Repository\CityRepository;
 use App\Repository\OutingRepository;

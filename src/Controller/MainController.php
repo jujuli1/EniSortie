@@ -50,17 +50,13 @@ final class MainController extends AbstractController
 
 
 
-    #[Route('/detailCity/{id}', name: 'app_detail_city')]
+    #[Route('/detailSortie/{id}', name: 'app_detail_sortie')]
     public function detailCity(OutingRepository $outingRepository,  CampusRepository $campusRepository, int $id): Response
     {
         $campus = $campusRepository->find($id);
         $outings = $outingRepository->findAll();
 
-
-
-
-
-        return $this->render('user/detailCity.html.twig', [
+        return $this->render('user/detailSortie.html.twig', [
 
             'outings' => $outings,
             'campus' => $campus,

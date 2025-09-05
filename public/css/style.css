@@ -40,3 +40,37 @@ ul{
     color: brown;
 }
 
+.nav{
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
+
+.sortie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 200px;
+    margin-top: 225px;
+    margin-right: 40px;
+}
+
+.sortie-card{
+    background-color: pink;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sortieDelete{
+    font-weight: bold;
+}
+
+
+
+
+
+

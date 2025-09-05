@@ -8,16 +8,29 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 
-
-
-    {% for sortie in sortie %}
-
-        <ul class="sortieHome">
-            <li><a href="{{ path('sortie_app_inscription',{'id': sortie.id} ) }}">{{ sortie.name }}</a></li>
-        </ul>
+    {% for label, messages in app.flashes %}
+        <div class="alert ">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
     {% endfor %}
+
+
+    <div class="sortie-grid">
+        {% for sortie in sortie %}
+            <div class="sortie-card">
+                <a href="{{ path('sortie_app_inscription', {'id': sortie.id}) }}">{{ sortie.name }}</a><br>
+                <a href="{{ path('sortie_app_delete', {'id': sortie.id}) }}" class="sortieDelete">Se désister</a>
+                <a href="{{ path('app_detail_sortie', {'id': sortie.id}) }}" class="sortieDelete">Détails</a>
+            </div>
+        {% endfor %}
+    </div>
+</table>
+
 
 
 

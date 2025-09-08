@@ -68,6 +68,15 @@ final class MainController extends AbstractController
         return $this->render('main/admin.html.twig');
     }
 
-
+//    #[Route('/error403', name: 'error403')]
+//    public function error403(): Response
+//    {
+//        return $this->render('exceptions/error403.html.twig');
+//    }
+//    #[Route('/error404', name: 'error404')]
+//    public function error404(): Response
+//    {
+//        return $this->render('exceptions/error404.html.twig');
+//    }
 
 }

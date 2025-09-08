@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Form\UserFormType;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use function PHPUnit\Framework\throwException;
 
 class UserController extends AbstractController
 {
@@ -37,6 +40,7 @@ class UserController extends AbstractController
 
     }
 
+
     #[IsGranted('ROLE_USER')]
     #[Route('/detailUser', name: 'detail')]
 
@@ -54,14 +58,11 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/afficheUser/{id}', name: 'afficheUser', requirements: ['id' => '\d+'])]
 
     public function afficheUser(int $id, UtilisateurRepository $repository): Response
     {
-        $userConnected = $this->getUser();
-        if(!$userConnected) {
-            return $this->redirectToRoute('app_login');
-        }
         $user = $repository->find($id);
 
         if(!$user){
@@ -76,7 +77,11 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/updateUser', name: 'update_user')]
 
-    public function updateUser(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function updateUser(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager
+    ): Response
     {
 
         $user = $this->getUser();
@@ -110,4 +115,24 @@ class UserController extends AbstractController
             'userForm' => $userForm
         ]);
     }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/inscriptionCSV', name: 'inscriptionCSV')]
+
+    public function inscriptionCSV(
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ) {
+        $user = $this->getUser();
+        if(!$user){
+            return $this->redirectToRoute('app_login');
+        }
+
+        $userForm = $this->createForm(UserFormType::class, $user);
+        $userForm->handleRequest($request);
+
+        return $this->render('user/inscriptionCSV.html.twig', []);
+    }
+
+
 }

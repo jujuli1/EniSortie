@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\City;
 use App\Entity\Location;
+use App\Repository\UtilisateurRepository;
+
 use App\Entity\Outing;
 use App\Form\OutingSearchType;
 use App\Form\OutingType;

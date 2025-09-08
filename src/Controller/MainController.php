@@ -33,15 +33,17 @@ final class MainController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/inscription', name: 'main_inscription')]
-    public function campus(OutingRepository $outingRepository, Request $request): Response
+    public function campus(OutingRepository $outingRepository, UtilisateurRepository $utilisateurRepository, Request $request): Response
     {
         $sortie = $outingRepository -> findAll();
+        $user = $utilisateurRepository->findAll();
 
 
 
 
         return $this->render('main/campus_inscription.html.twig', [
             'sortie' => $sortie,
+            'user' => $user
 
 
         ]);
@@ -50,22 +52,30 @@ final class MainController extends AbstractController
 
 
     #[Route('/detailSortie/{id}', name: 'app_detail_sortie')]
-    public function detailCity(OutingRepository $outingRepository,  CampusRepository $campusRepository, int $id): Response
+    public function detailCity(OutingRepository $outingRepository,  CampusRepository $campusRepository,UtilisateurRepository $utilisateurRepository, int $id): Response
     {
-        $campus = $campusRepository->find($id);
-        $outings = $outingRepository->findAll();
 
-        return $this->render('user/detailSortie.html.twig', [
+        $outing = $outingRepository->find($id);
 
-            'outings' => $outings,
-            'campus' => $campus,
+        if(!$outing) {
+            throw $this->createNotFoundException('Le sortie n\'existe pas');
+        }
+
+
+        return $this->render('main/detail.html.twig', [
+
+            'outing' => $outing,
+
         ]);
     }
 
     #[Route('/admin', name: 'app_admin')]
-    public function admin(): Response
+    public function admin(UtilisateurRepository $utilisateurRepository): Response
     {
-        return $this->render('main/admin.html.twig');
+
+        return $this->render('main/admin.html.twig', [
+
+        ]);
     }
 
 

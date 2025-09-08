@@ -6,12 +6,15 @@ use App\Entity\City;
 use App\Entity\Utilisateur;
 use App\Form\CampusSearchType;
 
+use App\Form\Model\OutingSearch;
+use App\Form\OutingSearchType;
 use App\Form\RegistrationFormType;
 use App\Repository\CampusRepository;
 use App\Repository\CityRepository;
 use App\Repository\OutingRepository;
 
 use App\Repository\UtilisateurRepository;
+use App\Service\OutingPermissionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,14 +24,45 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class MainController extends AbstractController
 {
-    #[Route('/', name: 'main_home')]
-    public function home(CampusRepository $campusRepository): Response
+    public function __construct(private readonly OutingPermissionService $outingPermissionService)
     {
+    }
+    /*
+     * Method to display outings according to the filter
+     *
+     * @param Request $request, OutingRepository $outingRepository,
+     *
+     * @return a Response
+     */
+    #[Route('/', name: 'main_home')]
+    public function listOutings(
+        Request $request,
+        OutingRepository $outingRepository
+    ): Response {
+        // Create the search form based on OutingSearchType and bind it to the search model
+        $searchOuting = new OutingSearch();
+        $searchForm = $this->createForm(OutingSearchType::class, $searchOuting);
+        // Handle the HTTP request
+        $searchForm->handleRequest($request);
 
-        $campus = $campusRepository->findAll();
-        return $this->render('main/home.html.twig', [
+        // Debug
+        //dump($searchOuting);
 
+        //  Get the currently authenticated user
+        $user = $this->getUser();
+        if(!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        // Fetch outings from repository with the applied filters and current user context
+        $outings = $outingRepository->search($searchOuting, $user);
+
+        // Render the list template with outings, permissions service, and search form
+        return $this->render('outing/list.html.twig', [
+            'outings' => $outings, // The filtered outings
+            'permission' => $this->outingPermissionService, // Service used for actions display logic
+            'searchForm' => $searchForm, // The search form for filtering outings
         ]);
+
     }
 
     #[Route('/inscription', name: 'main_inscription')]

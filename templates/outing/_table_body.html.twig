@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <tbody>
+    {% for outing in outings %}
+        <tr>
+            <td>{{ outing.name }}</td>
+            <td>{{ outing.startDateTime|date('d/m/Y H:i') }}</td>
+            <td>{{ outing.registrationlimitDate|date('d/m/Y') }}</td>
+            <td>{{ outing.participants|length }}/{{ outing.nbMaxRegistration }}</td>
+            <td>{{ outing.status.label }}</td>
+            <td>
+                {% if app.user and app.user in outing.participants %}
+                    ✔
+                {% else %}
+                    ✘
+                {% endif %}
+            </td>
+            <td>{{ outing.organizer.firstName }} {{ outing.organizer.lastName }}</td>
+            <td>
+                {% if permission.canShow(outing) %}
+                    <a href="">Afficher</a>
+                {% endif %}
+                {% if permission.canDesist(outing, app.user) %}
+                    <a href="">Se désister</a>
+                {% endif %}
+                {% if permission.canSubscribe(outing, app.user) %}
+                    <a href="">S'inscrire</a>
+                {% endif %}
+                {% if permission.canEditAndPublish(outing, app.user) %}
+                    <a href="">Modifier</a>
+                    <a href="">Publier</a>
+                {% endif %}
+                {% if permission.canCancel(outing, app.user) %}
+                    <a href="">Annuler</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="7">Aucune sortie trouvée</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+{% endblock %}
+
+
+

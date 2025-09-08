@@ -4,11 +4,20 @@ body{
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
 }
 
-a{
+header{
+    animation: zoom 0.3s forwards;
+}
+
+a {
     text-decoration: none;
     color: black;
+}
+
+a:hover{
+    animation: zoom 0.3s forwards;
 }
 
 .mb-3{
@@ -39,4 +48,140 @@ ul{
     list-style-type: none;
     color: brown;
 }
+
+.nav{
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
+
+.sortie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 200px;
+    margin-top: 225px;
+    width: 61%;
+}
+
+.sortie-card{
+    background-color: pink;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 175px;
+    display: flex;
+    flex-direction: column;
+    font-size: 180%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sortie-card:hover{
+    animation: zoom 0.3s forwards;
+}
+
+@keyframes zoom {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+.sortieDelete{
+    font-weight: bold;
+}
+
+.lesUtilisateurs{
+    display: flex;
+    flex-direction: column;
+    margin-right: 72%;
+}
+
+.lesParticipants{
+    margin-right: 140vh;
+}
+
+.carateristiqueSortie{
+
+    display: flex;
+    gap: 150px;
+    margin-top: 120px;
+}
+
+.goche{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.droate{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 360px) and (orientation: portrait){
+    body{
+        font-size: 200%
+    }
+
+    input{
+
+        font-size:150%;
+        gap:10px;
+    }
+
+    header{
+        width: 105%;
+
+    }
+
+    button{
+        width: 30%;
+        font-size: 100%;
+        margin-top: 40px;
+    }
+
+    .user-details{
+        font-size: 170%;
+        margin-top: 100px;
+    }
+
+    h1{
+        font-size: 100px;
+    }
+
+    .add-outing-form{
+        font-size: 40px;
+        margin-left: 5%;
+    }
+
+
+    select{
+        font-size: 80%;
+    }
+
+    .btn-outing-add{
+        margin-left: 10%;
+    }
+
+    .AddOutingBtn{
+        display: none;
+    }
+
+    .sortie-card{
+        width: 30%;
+    }
+
+    .lesUtilisateurs{
+        display: flex;
+        flex-direction: column;
+        margin-right: 72%;
+    }
+}
+
+
+
 

@@ -11,6 +11,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
@@ -30,12 +31,13 @@ class UserController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
+    #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
 
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/detailUser', name: 'detail')]
 
     public function detail(): Response
@@ -52,6 +54,26 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/afficheUser/{id}', name: 'afficheUser', requirements: ['id' => '\d+'])]
+
+    public function afficheUser(int $id, UtilisateurRepository $repository): Response
+    {
+        $userConnected = $this->getUser();
+        if(!$userConnected) {
+            return $this->redirectToRoute('app_login');
+        }
+        $user = $repository->find($id);
+
+        if(!$user){
+            throw $this->createNotFoundException('Oooppps! User not found !');
+        }
+
+        return $this->render('user/detail.html.twig', [
+            'user' => $user
+        ]);
+    }
+
+    #[IsGranted('ROLE_USER')]
     #[Route('/updateUser', name: 'update_user')]
 
     public function updateUser(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response

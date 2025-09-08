@@ -2,11 +2,67 @@
 
 {% block title %}
 
+
+
 {% endblock %}
 
 {% block body %}
 
-    {{ campus.id }}
+
+
+
+
+
+
+    {% for participant in outing.participants %}
+
+
+
+        <div class="caracteristique">
+            <ul class="carateristiqueSortie">
+                <div class="goche">
+                    <li>Nom de la sortie : {{ outing.name }}</li>
+                    <li>date et heure de la sortie : {{ outing.startDateTime|date('d/m/Y') }}</li>
+                    <li>date limite d'inscription : {{ outing.registrationLimitDate|date('d/m/Y') }}</li>
+                    <li>Nombre de place : {{ outing.nbMaxRegistration }}</li>
+                    <li>Durée : {{ outing.duration }} minutes</li>
+                    <li>Description et infos : {{ outing.outingInfos }}</li>
+                </div>
+
+                <div class="droate">
+                    {% for campus in outing.campus %}
+                    <li>Campus : {{ outing.campus.name }}</li>
+                        {% endfor %}
+                    <li>Lieu : {{ outing.location.name }}</li>
+                    <li>Rue :  {{ outing.location.street }}</li>
+
+                    <li>Latitude : {{ outing.location.latitude }}</li>
+                    <li>Longitude : {{ outing.location.longitude }}</li>
+
+                </div>
+
+            </ul>
+
+        </div>
+
+
+        {% if outing.participants is not empty %}
+
+            {% for participant in outing.participants %}
+<div class="lesParticipants">
+    <p class="participantOuting"><strong>Personne(s) participant à cette sortie : </strong></p>
+    <a>{{ participant.lastname }}</a>
+
+</div>
+
+            {% endfor %}
+
+        {% else %}
+            <p>Aucun participant pour le moment.</p>
+        {% endif %}
+
+    {% endfor %}
+
 
 {% endblock %}
 

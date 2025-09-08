@@ -5,15 +5,15 @@
 
         <li><a href="{{ path('main_home') }}">Home</a></li>
 
-
-
-
         {% if app.user %}
 
             <li><a href="{{ path('app_logout') }}">Logout</a></li>
             <li><a href="{{ path('detail') }}">Mon profile</a></li>
             <li><a href="{{ path('update_user') }}">Gérer mon profile</a></li>
-            <li><a href="{{ path('sortie_add') }}">Ajouter une sortie</a></li>
+
+            <li><a  href="{{ path('main_inscription') }}">S'inscrire à une sortie</a></li>
+            <li><a class="AddOutingBtn" href="{{ path('sortie_add') }}">Ajouter une sortie</a></li>
+
 
 
         {% else %}

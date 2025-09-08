@@ -1,9 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <h1>Administration</h1>
+
+    <a href="{{ path('app_register_admin') }}">Ajouter un utilisateur</a>
+
+
 {% endblock %}
 
 {% block title %}
+
+
 
 {% endblock %}

@@ -21,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class MainController extends AbstractController
 {
@@ -65,19 +66,12 @@ final class MainController extends AbstractController
 
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/inscription', name: 'main_inscription')]
-    public function campus(OutingRepository $outingRepository, Request $request): Response
+    public function campus(OutingRepository $outingRepository, UtilisateurRepository $utilisateurRepository, Request $request): Response
     {
-
-
-
         $sortie = $outingRepository -> findAll();
-
-
-
-
-
-        //verifier le nb max de participant et si la date limite d'inscrition nest pas depasser
+        $user = $utilisateurRepository->findAll();
 
 
 
@@ -92,27 +86,31 @@ final class MainController extends AbstractController
 
 
 
-    #[Route('/detailCity/{id}', name: 'app_detail_city')]
-    public function detailCity(OutingRepository $outingRepository,  CampusRepository $campusRepository, int $id): Response
+    #[Route('/detailSortie/{id}', name: 'app_detail_sortie')]
+    public function detailCity(OutingRepository $outingRepository,  CampusRepository $campusRepository,UtilisateurRepository $utilisateurRepository, int $id): Response
     {
-        $campus = $campusRepository->find($id);
-        $outings = $outingRepository->findAll();
+
+        $outing = $outingRepository->find($id);
+
+        if(!$outing) {
+            throw $this->createNotFoundException('Le sortie n\'existe pas');
+        }
 
 
+        return $this->render('main/detail.html.twig', [
 
+            'outing' => $outing,
 
-
-        return $this->render('user/detailCity.html.twig', [
-
-            'outings' => $outings,
-            'campus' => $campus,
         ]);
     }
 
     #[Route('/admin', name: 'app_admin')]
-    public function admin(): Response
+    public function admin(UtilisateurRepository $utilisateurRepository): Response
     {
-        return $this->render('main/admin.html.twig');
+
+        return $this->render('main/admin.html.twig', [
+
+        ]);
     }
 
 

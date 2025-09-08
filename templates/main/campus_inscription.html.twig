@@ -28,8 +28,24 @@
                 <a href="{{ path('app_detail_sortie', {'id': sortie.id}) }}" class="sortieDelete">Détails</a>
             </div>
         {% endfor %}
+        {#
+        <div class="lesUtilisateurs">
+            <a href="{{ path('app_register_admin') }}">Inscrire un nouvel utilisateur</a>
+
+            {% for user in user %}
+
+                <ul>
+                    <li>{{ user.firstName }}</li>
+                    <li>{{ user.email }}</li>
+                    <li>{{ user.phoneNumber }}</li>
+                </ul>
+
+            {% endfor %}
+        </div> #}
+
+
     </div>
-</table>
+
 
 
 

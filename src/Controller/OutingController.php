@@ -4,9 +4,8 @@ namespace App\Controller;
 
 use App\Entity\City;
 use App\Entity\Location;
-use App\Repository\UtilisateurRepository;
-
 use App\Entity\Outing;
+use App\Form\Model\OutingSearch;
 use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\CampusRepository;
@@ -24,29 +23,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/sortie', name: 'sortie_')]
 final class OutingController extends AbstractController
 {
-    #[Route('/list', name: 'list')]
-    public function listOutings(
-        Request $request,
-        OutingRepository $outingRepository
-    ): Response {
-        // Create a search form
-        $searchForm = $this->createForm(OutingSearchType::class);
-        $searchForm->handleRequest($request);
-
-        // Retrieve outings with filter
-        $filters = $searchForm->getData() ?? [];
-
-        // Retrieve the connected user
-        $user = $this->getUser();
-        $outings = $outingRepository->search($filters);
-
-        return $this->render('outing/list.html.twig', [
-            'outings' => $outings,
-            'searchForm' => $searchForm,
-        ]);
-
-    }
-
 
     /*
      * Method to create an outing
@@ -70,6 +46,10 @@ final class OutingController extends AbstractController
         int $campusId = null
     ): Response
     {
+        $user = $this->getUser();
+        if(!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         $outing = new Outing();
 
          if($locationId) {

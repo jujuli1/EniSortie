@@ -96,7 +96,10 @@
 /******************************************** Outing list page *************************************/
 .search-form {
     justify-content: space-between;
+}
 
+.search-form input[type=text] {
+    border-radius: 15px;
 }
 
 .search-btn button{
@@ -108,5 +111,33 @@
 
 }
 
+.list-outing-page-section a:hover {
+    text-decoration: underline;
+}
+
+.created-outing-link {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    margin-top: 1rem;
+}
+
+.created-outing-link a {
+    border: 1px solid black;
+    padding: 1rem;
+    box-shadow: 5px 3px 3px 6px rgb(45, 45, 46);
+}
+
+.display-date  {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.display-date p {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
 
 

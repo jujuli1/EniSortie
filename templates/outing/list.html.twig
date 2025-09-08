@@ -1,28 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <section class="list-outing-page-section">
+    <div class="list-outing-page-section">
+        <div class="display-date">
+            <p>Date du jour: {{ "now"|date("m/d/Y") }}</p>
+        </div>
         <h2>Filtrer les sorties</h2>
         <div class="search-form">
             <div>
                 {{ form_start(searchForm, {'attr': {'id': 'search-form'}}) }}
-                {{ form_row(searchForm.campus, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
-                {{ form_row(searchForm.NameContentWord, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                {{ form_row(searchForm.campus) }}
+                {{ form_row(searchForm.nameContentWord) }}
                 <div class="search-date">
-                    {{ form_row(searchForm.startDate, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
-                    {{ form_row(searchForm.endDate, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                    {{ form_row(searchForm.startDate) }}
+                    {{ form_row(searchForm.endDate) }}
                 </div>
             </div>
             <div>
-                {{ form_row(searchForm.isOrganizer, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
-                {{ form_row(searchForm.isParticipant, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
-                {{ form_row(searchForm.isNotParticipant, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
-                {{ form_row(searchForm.isPassed, {'attr': {'onchange': 'this.form.dispatchEvent(new Event("change"));'}}) }}
+                {{ form_row(searchForm.isOrganizer) }}
+                {{ form_row(searchForm.isParticipant) }}
+                {{ form_row(searchForm.isNotParticipant) }}
+                {{ form_row(searchForm.isPassed) }}
             </div>
             <div class="search-btn">
-                    <button type="submit">Rechercher</button>
-                </div>
-                {{ form_end(searchForm) }}
+                <button id="btn-search" type="submit">Rechercher</button>
+            </div>
+            {{ form_end(searchForm) }}
         </div>
 
         <table id="outing-table" border="1" cellpadding="10" cellspacing="0">
@@ -46,19 +49,36 @@
                     <td>{{ outing.registrationlimitDate|date('d/m/Y') }}</td>
                     <td>{{ outing.participants|length }}/{{ outing.nbMaxRegistration }}</td>
                     <td>{{ outing.status.label }}</td>
-                    {% if app.user and app.user.roles == ['ROLE_PARTICIPANT'] %}
-                            <td></td>
+                    {% if app.user and app.user in outing.participants %}
+                        <td></td>
                     {% else %}
                         <td>X</td>
                     {% endif %}
 
-                    <td>{{ outing.organizer.firstName }}</td>
                     <td>
-                        <a href="">afficher</a>
-                        <a href="">Se désister</a>
-                        <a href="">S'inscrire</a>
-                        <a href="">Publier</a>
-                        <a href="">Annuler</a>
+                        <a href="{{ path('detail') }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName }}</a>
+                    </td>
+                    <td>
+                        {% if permission.canShow(outing) %}
+                            <a href="">Afficher </a>
+                        {% endif %}
+
+                        {% if permission.canDesist(outing, app.user) %}
+                            <a href="">Se désister</a>
+                        {% endif %}
+
+                        {% if permission.canSubscribe(outing, app.user) %}
+                            <a href="">S'inscrire</a>
+                        {% endif %}
+
+                        {% if permission.canEditAndPublish(outing, app.user) %}
+                            <a href="">Modifier </a>
+                            <a href="">Publier</a>
+                        {% endif %}
+
+                        {% if permission.canCancel(outing, app.user) %}
+                            <a href="">Annuler</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -68,10 +88,13 @@
             {% endfor %}
             </tbody>
         </table>
-    </section>
-{% block javascripts %}
-{{ parent() }}
-<script {{ asset('js/outing.js') }}></script>
-{% endblock %}
+        <div class="created-outing-link">
+            <a href="{{ path('sortie_add') }}">Créer une sortie</a>
+        </div>
+    </div>
+    {% block javascripts %}
+        <script {{ asset('js/outing.js') }}></script>
+        {{ parent() }}
+    {% endblock %}
 
 {% endblock %}

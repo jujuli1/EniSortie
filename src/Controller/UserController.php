@@ -40,7 +40,6 @@ class UserController extends AbstractController
 
     }
 
-
     #[IsGranted('ROLE_USER')]
     #[Route('/detailUser', name: 'detail')]
 

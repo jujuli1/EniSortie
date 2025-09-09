@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Campus;
+use App\Form\Model\OutingSearch;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -17,23 +18,22 @@ class OutingSearchType extends AbstractType
         $builder
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
-                'choice_label' => 'name',
-                'required' => false,
-                'placeholder' => 'Tous les campus',
-            ])
-            ->add('NameContentWord', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
+                'choice_label' => 'name', 'required' => false,
+                'placeholder' => 'Tous les campus'
+             ])
+            ->add('nameContentWord', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
                 'required' => false,
                 'label' => 'Le nom de la sortie contient : ',
             ])
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
-                'label'  => 'Entre'
+                'label' => 'Entre'
             ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
-                'label'  => 'et'
+                'label' => 'et'
             ])
             ->add('isOrganizer', checkboxType::class, [
                 'required' => false,
@@ -47,8 +47,7 @@ class OutingSearchType extends AbstractType
                 'required' => false,
                 'label' => 'Sorties auxquelles je ne suis pas inscrit/e'
             ])
-            ->add('isPassed', checkboxType::class, [
-                'required' => false,
+            ->add('isPassed', checkboxType::class, ['required' => false,
                 'label' => 'Sorties passées'
             ])
 
@@ -58,9 +57,8 @@ class OutingSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'method' => 'GET', // Conserve URL filter
-            'csrf_protection' => false,
-
+            'method' => 'GET',
+           'date_class' => OutingSearch::class
         ]);
     }
 }

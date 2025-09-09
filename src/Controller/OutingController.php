@@ -13,7 +13,6 @@ use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
-use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,14 +124,10 @@ final class OutingController extends AbstractController
     #[Route('/inscription/{id}', name: 'app_inscription')]
     public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
-
-
-
         ///user connecté
         $user = $this->getUser();
 
         $sortie = $outingRepository->find($id);
-
 
         $date = new \DateTime('now');
         $dateInscription = $sortie->getRegistrationLimitDate();
@@ -151,7 +146,7 @@ final class OutingController extends AbstractController
             return $this->render('main/failed_registration.html.twig', [
                 'max' => $sortieMax,
                 'errorMax' => '',
-                'errorDate' => 'La date limite a été dépasser ... '
+                'errorDate' => 'La date limite a été dépassée ... '
             ]);
         }
 
@@ -166,18 +161,11 @@ final class OutingController extends AbstractController
 
         $this->addFlash('type', 'Vous etes inscrit ! Bravo !');
 
-
         return $this->redirectToRoute('main_inscription', [
             "user" => $user,
             'sortie' => $sortie,
             'max' => $sortieMax,
-
-
-
-
-
         ]);
-
 
     }
 

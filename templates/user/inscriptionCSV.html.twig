@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-    <h1>Veuillez charger le fichier :</h1>
-{% endblock %}
-
-{% block title %}
-    <title>Inscription CSV</title>
+    {% embed 'form/form_template.html.twig' with {form : csvForm} %}
+        {% block title %} <title> Inscription CSV </title>{% endblock %}
+        {% block buttonLabel %} Enregistrer {% endblock %}
+    {% endembed %}
+    <a href="{{ path('detail') }}">Annuler</a>
 {% endblock %}
 

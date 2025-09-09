@@ -38,18 +38,11 @@ final class MainController extends AbstractController
         $sortie = $outingRepository -> findAll();
         $user = $utilisateurRepository->findAll();
 
-
-
-
         return $this->render('main/campus_inscription.html.twig', [
             'sortie' => $sortie,
             'user' => $user
-
-
         ]);
     }
-
-
 
     #[Route('/detailSortie/{id}', name: 'app_detail_sortie')]
     public function detailCity(OutingRepository $outingRepository,  CampusRepository $campusRepository,UtilisateurRepository $utilisateurRepository, int $id): Response

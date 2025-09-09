@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateur;
+use App\Form\InscriptionCSVType;
 use App\Form\UserFormType;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -120,18 +122,64 @@ class UserController extends AbstractController
 
     public function inscriptionCSV(
         Request $request,
-        EntityManagerInterface $entityManager,
-    ) {
-        $user = $this->getUser();
-        if(!$user){
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager)
+    {
+        $userConnected = $this->getUser();
+        if (!$userConnected) {
             return $this->redirectToRoute('app_login');
         }
 
-        $userForm = $this->createForm(UserFormType::class, $user);
-        $userForm->handleRequest($request);
+        $csvForm = $this->createForm(InscriptionCSVType::class);
+        $csvForm->handleRequest($request);
 
-        return $this->render('user/inscriptionCSV.html.twig', []);
+        if ($csvForm->isSubmitted() && $csvForm->isValid()) {
+
+            $file = $csvForm->get('fichier')->getData();
+            $campus = $csvForm->get('campus')->getData();
+            $role = $csvForm->get('roles')->getData();
+
+            // Open the file
+            if (($handle = fopen($file->getPathname(), "r")) !== false) {
+                // Read and process the lines.
+                // Skip the first line if the file includes a header
+
+                while (($data = fgetcsv($handle, 80, ";")) !== false && $data[0] !== "pseudo") {
+                    // Do the processing: Map line to entity, validate if needed
+
+                    $user = new Utilisateur();
+                    // Assign fields
+
+                    $user->setPseudo($data[0]);
+                    $user->setLastName($data[1]);
+                    $user->setFirstName($data[2]);
+                    $user->setEmail($data[3]);
+                    $user->setPhoneNumber($data[4]);
+
+                    $plainPassword = $csvForm->get('plainPassword')->getData();
+                    $password = $passwordHasher->hashPassword($user, $plainPassword);
+                    $user->setPassword($password);
+
+                    $user->setActif(true);
+                    $user->setRoles([$role]);
+                    $user->setCampus($campus);
+                    $entityManager->persist($user);
+
+                }
+                fclose($handle);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'User profile created !');
+                return $this->redirectToRoute('main_home');
+            }
+
+            return $this->render('user/inscriptionCSV.html.twig', [
+                'csvForm' => $csvForm
+            ]);
+        }
+        return $this->render('user/inscriptionCSV.html.twig', [
+            'csvForm' => $csvForm
+        ]);
     }
-
 
 }

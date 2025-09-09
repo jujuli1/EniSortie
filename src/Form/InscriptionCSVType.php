@@ -7,38 +7,55 @@ use App\Entity\Outing;
 use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\File\File;
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Image;
 
 class InscriptionCSVType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            ->add('roles')
-            ->add('password')
-            ->add('lastName')
-            ->add('firstName')
-            ->add('phoneNumber')
-            ->add('userImage')
+
+            ->add('roles', ChoiceType::class,
+            [
+                'expanded' => true,
+                'multiple' => true,
+                'choices'  => [
+                    'User' => 'ROLE_USER',
+                    'Admin' => 'ROLE_ADMIN'
+                ]
+            ]
+            )
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name'
             ])
             ->add('fichier', FileType::class, [
                 'label' => 'Fichier',
                 'mapped' => false,
-                'constraints' => [
+//                'constraints' => [
 //                    new File(
 //                        maxSize: '1M',
+//                        //mimeTypes: ['text/plain', 'text/csv', 'application/csv'],
 //                        maxSizeMessage: "Le fichier ne doit pas dépasser 1 Mo",
 //                        extensions: ['csv'],
 //                        extensionsMessage: "Seulement le type .csv est autorisé"
 //                    )
-                ]
+//                ]
+            ])
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
+                'first_options'  => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmation'],
+                'mapped' => false
             ])
         ;
     }

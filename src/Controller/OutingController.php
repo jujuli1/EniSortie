@@ -14,7 +14,7 @@ use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
-use App\Repository\UtilisateurRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,7 +94,7 @@ final class OutingController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
             $this->addFlash("succes", "Sortie ajoutée avec succès");
-            return $this->redirectToRoute('sortie_list');
+            return $this->redirectToRoute('main_inscription');
         }
         // Retrieve all cities to display to the form
 
@@ -103,8 +103,10 @@ final class OutingController extends AbstractController
         ]);
 
     }
+
+
     #[IsGranted('ROLE_USER')]
-    #[Route('/inscription/{id}', name: 'app_inscription')]
+    #[Route('/{id}', name: 'app_inscription')]
     public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
 
@@ -153,15 +155,12 @@ final class OutingController extends AbstractController
             "user" => $user,
             'sortie' => $sortie,
             'max' => $sortieMax,
-
-
-
-
-
         ]);
 
 
     }
+
+
 
     #[IsGranted('ROLE_USER')]
     #[Route('/delete/{id}', name: 'app_delete')]

@@ -28,6 +28,10 @@
             {{ form_end(searchForm) }}
         </div>
 
+        <div class="created-outing-link">
+            <a href="{{ path('sortie_add') }}">Créer une sortie</a>
+        </div>
+
         <table id="outing-table" border="1" cellpadding="10" cellspacing="0">
             <thead>
             <tr>
@@ -58,18 +62,29 @@
                     <td>
                         <a href="{{ path('detail') }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName }}</a>
                     </td>
+
+
                     <td>
                         {% if permission.canShow(outing) %}
-                            <a href="">Afficher </a>
+                            <a href="{{ path('app_detail_sortie', {'id': outing.id}) }}">Afficher </a>
                         {% endif %}
 
-                        {% if permission.canDesist(outing, app.user) %}
-                            <a href="">Se désister</a>
+                    <td>
+                        {% if permission.canShow(outing, app.user) %}
+                            <a href="{{ path('sortie_app_delete', {'id': outing.id}) }}">Se désister</a>
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        {% if permission.canShow(outing, app.user) %}
+                            <a href="{{ path('sortie_app_inscription', {'id': outing.id}) }}">S'inscrire</a>
                         {% endif %}
 
-                        {% if permission.canSubscribe(outing, app.user) %}
-                            <a href="">S'inscrire</a>
-                        {% endif %}
+                    </td>
+
+
+
 
                         {% if permission.canEditAndPublish(outing, app.user) %}
                             <a href="">Modifier </a>
@@ -88,9 +103,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <div class="created-outing-link">
-            <a href="{{ path('sortie_add') }}">Créer une sortie</a>
-        </div>
+
     </div>
     {% block javascripts %}
         <script {{ asset('js/outing.js') }}></script>

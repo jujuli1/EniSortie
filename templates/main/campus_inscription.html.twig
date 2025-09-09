@@ -19,6 +19,8 @@
         </div>
     {% endfor %}
 
+    <a href="{{ path('main_home') }}"> Retour </a>
+
 
     <div class="sortie-grid">
        {#
@@ -34,33 +36,10 @@
        #}
 
         <table border="1" cellpadding="10" cellspacing="0">
-            <thead>
-            <tr>
-                <th>Nom de la sortie</th>
-                <th>Inscription</th>
-                <th>Se désister</th>
-                <th>Détails</th>
-            </tr>
-            </thead>
+
             <tbody>
-            {% for sortie in sortie %}
-                <tr>
-                    <td>{{ sortie.name }}</td>
-                    <td>
-                        <a href="{{ path('sortie_app_inscription', {'id': sortie.id}) }}">S'inscrire</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('sortie_app_delete', {'id': sortie.id}) }}" class="sortieDelete">Se désister</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('app_detail_sortie', {'id': sortie.id}) }}">Détails</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4">Aucune sortie disponible.</td>
-                </tr>
-            {% endfor %}
+
+
             </tbody>
         </table>
 

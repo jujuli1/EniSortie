@@ -83,9 +83,6 @@ final class MainController extends AbstractController
 
         return $this->render('main/campus_inscription.html.twig', [
             'sortie' => $sortie,
-
-
-
         ]);
     }
 

@@ -21,13 +21,49 @@
 
 
     <div class="sortie-grid">
-        {% for sortie in sortie %}
+       {#
+       {% for sortie in sortie %}
             <div class="sortie-card">
                 <a href="{{ path('sortie_app_inscription', {'id': sortie.id}) }}">{{ sortie.name }}</a><br>
                 <a href="{{ path('sortie_app_delete', {'id': sortie.id}) }}" class="sortieDelete">Se désister</a>
                 <a href="{{ path('app_detail_sortie', {'id': sortie.id}) }}" class="sortieDelete">Détails</a>
             </div>
+
+
         {% endfor %}
+       #}
+
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Inscription</th>
+                <th>Se désister</th>
+                <th>Détails</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sortie in sortie %}
+                <tr>
+                    <td>{{ sortie.name }}</td>
+                    <td>
+                        <a href="{{ path('sortie_app_inscription', {'id': sortie.id}) }}">S'inscrire</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('sortie_app_delete', {'id': sortie.id}) }}" class="sortieDelete">Se désister</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('app_detail_sortie', {'id': sortie.id}) }}">Détails</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucune sortie disponible.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
         {#
         <div class="lesUtilisateurs">
             <a href="{{ path('app_register_admin') }}">Inscrire un nouvel utilisateur</a>

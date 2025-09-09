@@ -59,9 +59,10 @@ ul{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 200px;
+    gap: 75px;
     margin-top: 225px;
     width: 61%;
+    font-size: 10px;
 }
 
 .sortie-card{
@@ -74,6 +75,7 @@ ul{
     flex-direction: column;
     font-size: 180%;
     transition: transform 0.3s ease-in-out;
+    gap: 20px;
 }
 
 .sortie-card:hover{
@@ -100,7 +102,25 @@ ul{
 }
 
 .lesParticipants{
-    margin-right: 140vh;
+    display: flex;
+
+
+}
+
+.participantListeName{
+    border: 2px solid black;
+    width: 130px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.participantListCity{
+    border: 2px solid black;
+    width: 130px;
+    display: flex;
+    justify-content: center;
+
 }
 
 .carateristiqueSortie{
@@ -179,6 +199,31 @@ ul{
         display: flex;
         flex-direction: column;
         margin-right: 72%;
+    }
+
+    .sortie-grid{
+
+        display: flex;
+        flex-direction: row;
+        font-size: 16px;
+        justify-content: center;
+        gap: 150px;
+        margin-top: 225px;
+        width: 61%;
+        align-items: center;
+    }
+
+    .nav{
+        margin-left: 20px;
+    }
+
+    .lesParticipants{
+        margin-right: 0px;
+    }
+
+    .caracteristique{
+
+        font-size: 2vh;
     }
 }
 

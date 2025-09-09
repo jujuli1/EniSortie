@@ -26,7 +26,8 @@ final class OutingController extends AbstractController
     #[Route('/list', name: 'list')]
     public function listOutings(
         Request $request,
-        OutingRepository $outingRepository
+        OutingRepository $outingRepository,
+
     ): Response {
         // Create a search form
         $searchForm = $this->createForm(OutingSearchType::class);
@@ -39,12 +40,17 @@ final class OutingController extends AbstractController
         $user = $this->getUser();
         $outings = $outingRepository->search($filters);
 
+
         return $this->render('outing/list.html.twig', [
             'outings' => $outings,
             'searchForm' => $searchForm,
+
+
         ]);
 
     }
+
+
 
 
     /*
@@ -127,6 +133,7 @@ final class OutingController extends AbstractController
 
 
 
+
         ///user connecté
         $user = $this->getUser();
 
@@ -170,10 +177,6 @@ final class OutingController extends AbstractController
             "user" => $user,
             'sortie' => $sortie,
             'max' => $sortieMax,
-
-
-
-
 
         ]);
 

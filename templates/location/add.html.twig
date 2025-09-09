@@ -16,8 +16,19 @@
                 <button type="reset">Annuler</button>
             </div>
             {{ form_end(locationForm) }}
+            <div>
+                <label for="location-autocomplete">Chercher un lieu</label>
+                <input type="text" id="location-autocomplete" autocomplete="off" placeholder="Ex: Gare, Rue de Paris">
+                <ul id="autocomplete-results"></ul>
+            </div>
+
         </div>
     </section>
+
+    {% block javascripts %}
+        <script {{ asset('js/location.js') }}></script>
+        {{ parent() }}
+    {% endblock %}
 {% endblock %}
 
 

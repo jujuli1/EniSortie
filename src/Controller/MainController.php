@@ -14,8 +14,10 @@ use App\Repository\CityRepository;
 use App\Repository\OutingRepository;
 
 use App\Repository\UtilisateurRepository;
+use App\Service\LocationApiService;
 use App\Service\OutingPermissionService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -38,7 +40,8 @@ final class MainController extends AbstractController
     #[Route('/', name: 'main_home')]
     public function listOutings(
         Request $request,
-        OutingRepository $outingRepository
+        OutingRepository $outingRepository,
+        UtilisateurRepository $utilisateurRepository
     ): Response {
         // Create the search form based on OutingSearchType and bind it to the search model
         $searchOuting = new OutingSearch();
@@ -57,11 +60,13 @@ final class MainController extends AbstractController
         // Fetch outings from repository with the applied filters and current user context
         $outings = $outingRepository->search($searchOuting, $user);
 
+
         // Render the list template with outings, permissions service, and search form
         return $this->render('outing/list.html.twig', [
             'outings' => $outings, // The filtered outings
             'permission' => $this->outingPermissionService, // Service used for actions display logic
             'searchForm' => $searchForm, // The search form for filtering outings
+            'user' => $user,
         ]);
 
     }
@@ -111,6 +116,21 @@ final class MainController extends AbstractController
         return $this->render('main/admin.html.twig', [
 
         ]);
+    }
+
+
+    #[Route('', name: 'list')]
+    public function listLocations() {
+
+    }
+
+    #[Route('/api/locations/{id}', name: 'api_locations')]
+    public function getLocationsByCity(
+        City $city,
+        LocationApiService $locationApiService
+    ): JsonResponse {
+        $locations = $locationApiService->searchLocationsByCityEntity($city);
+        return $this->json($locations);
     }
 
 

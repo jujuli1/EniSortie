@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\City;
 use App\Entity\Location;
 use App\Form\LocationType;
-use App\Repository\CityRepository;
+use App\Service\LocationApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,36 +19,32 @@ final class LocationController extends AbstractController
     public function createLocation(
         Request $request,
         EntityManagerInterface $entityManager,
-        CityRepository $cityRepository,
-        int $cityId = null
+        LocationApiService $locationApiService,
     ): Response {
+        // Instantiate the location entity
         $location = new Location();
-        if($cityId) {
-            // Retrieve the city by its identifier, check if the city isn't retrieved to throw a created not found exception and set the outing with the city retrieved
-            $city = $cityRepository->find($cityId);
-            if(!$city) {
-                throw $this->createNotFoundException('Le status n\'existe pas');
-            }
-            $location->setCity($city);
-        }
 
-        // Create the location form
-        $locationForm = $this->createform(LocationType::class, $location);
+        // Create the location form based on Location type and bind it to the location entity
+        $locationForm = $this->createForm(LocationType::class, $location);
+
+        // Handle the HTTP request
         $locationForm->handleRequest($request);
-        if($locationForm->isSubmitted() && $locationForm->isValid()) {
+
+        // Check if the location form is submitted and have valid values according to fields constraints
+        if ($locationForm->isSubmitted() && $locationForm->isValid()) {
+            // Persist and flush the data to the database
             $entityManager->persist($location);
             $entityManager->flush();
-            $this->addFlash("succes", "Le lieu a été ajoutée avec succès");
-            return $this->redirectToRoute('location_list');
+            // Add flash to display successful message
+            $this->addFlash('success', 'Lieu créé avec succès');
+            // Redirect to the homa page
+            return $this->redirectToRoute('main_home');
         }
+
+        // Render the add location necessary data
         return $this->render('location/add.html.twig', [
-            'locationForm' => $locationForm
+            'locationForm' => $locationForm,
         ]);
     }
 
-
-    #[Route('/location', name: 'list')]
-    public function listLocations() {
-
-    }
 }

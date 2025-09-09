@@ -4,6 +4,7 @@
     <div class="list-outing-page-section">
         <div class="display-date">
             <p>Date du jour: {{ "now"|date("m/d/Y") }}</p>
+            <p>Utilisateur: {{  user.userIdentifier }}</p>
         </div>
         <h2>Filtrer les sorties</h2>
         <div class="search-form">
@@ -60,15 +61,15 @@
                     </td>
                     <td>
                         {% if permission.canShow(outing) %}
-                            <a href="">Afficher </a>
+                            <a href="{{ path('app_detail_sortie', {'id': outing.id}) }}">Afficher </a>
                         {% endif %}
 
                         {% if permission.canDesist(outing, app.user) %}
                             <a href="">Se désister</a>
                         {% endif %}
 
-                        {% if permission.canSubscribe(outing, app.user) %}
-                            <a href="">S'inscrire</a>
+                        {% if permission.canSubscribe(outing, app.user)  and outing.startDateTime < date() %}
+                            <a href="{{ path('sortie_app_inscription', {'id': outing.id}) }}">S'inscrire</a>
                         {% endif %}
 
                         {% if permission.canEditAndPublish(outing, app.user) %}

@@ -2,11 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\City;
-use App\Entity\Location;
 use App\Entity\Outing;
-use App\Form\Model\OutingSearch;
-use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
@@ -92,9 +88,8 @@ final class OutingController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
             $this->addFlash("succes", "Sortie ajoutée avec succès");
-            return $this->redirectToRoute('sortie_list');
+            return $this->redirectToRoute('main_home');
         }
-        // Retrieve all cities to display to the form
 
         return $this->render('outing/add.html.twig', [
             "outingForm" => $outingForm
@@ -163,7 +158,7 @@ final class OutingController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/delete/{id}', name: 'app_delete')]
-public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+    public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
 
 

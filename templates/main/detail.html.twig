@@ -45,13 +45,14 @@
 
         </div>
 
-
+        <p class="participantOuting"><strong>Personne(s) participant à cette sortie : </strong></p>
         {% if outing.participants is not empty %}
 
             {% for participant in outing.participants %}
 <div class="lesParticipants">
-    <p class="participantOuting"><strong>Personne(s) participant à cette sortie : </strong></p>
-    <a>{{ participant.lastname }}</a>
+
+    <a class="participantListeName">{{ participant.lastname }}</a>
+    <a class="participantListCity">{{ participant.campus.name }}</a>
 
 </div>
 

@@ -2,6 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Outing;
+use App\Form\OutingType;
+use App\Repository\StatusRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
 class TestController
 {
     #[Route('/outing/add', name: 'outing_add')]

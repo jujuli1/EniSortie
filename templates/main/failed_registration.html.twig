@@ -6,6 +6,7 @@
 
 {% block body %}
 
+    <h1 class="tea"> ERROR 418 </h1>
 
     <p>Valeur de max : {{ max }}</p>
 
@@ -13,7 +14,7 @@
 
         <p>{{ errorMax}} </p>
     <p>{{ errorDate }}</p>
-    <p><a href="{{  path('main_inscription') }}">Choisir un autre endroit pour sortir</a> </p>
+    <p><a href="{{ path('main_home') }}">Choisir un autre endroit pour sortir</a> </p>
 
 
 

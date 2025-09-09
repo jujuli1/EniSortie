@@ -144,9 +144,12 @@ class UserController extends AbstractController
                 // Read and process the lines.
                 // Skip the first line if the file includes a header
 
-                while (($data = fgetcsv($handle, 80, ";")) !== false && $data[0] !== "pseudo") {
+                while (($data = fgetcsv($handle, 80, ";")) !== false) {
                     // Do the processing: Map line to entity, validate if needed
 
+                    if ($data[0] == "pseudo") {
+                        continue;
+                    }
                     $user = new Utilisateur();
                     // Assign fields
 
@@ -161,7 +164,7 @@ class UserController extends AbstractController
                     $user->setPassword($password);
 
                     $user->setActif(true);
-                    $user->setRoles([$role]);
+                    $user->setRoles($role);
                     $user->setCampus($campus);
                     $entityManager->persist($user);
 

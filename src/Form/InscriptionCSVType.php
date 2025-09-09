@@ -39,16 +39,7 @@ class InscriptionCSVType extends AbstractType
             ])
             ->add('fichier', FileType::class, [
                 'label' => 'Fichier',
-                'mapped' => false,
-//                'constraints' => [
-//                    new File(
-//                        maxSize: '1M',
-//                        //mimeTypes: ['text/plain', 'text/csv', 'application/csv'],
-//                        maxSizeMessage: "Le fichier ne doit pas dépasser 1 Mo",
-//                        extensions: ['csv'],
-//                        extensionsMessage: "Seulement le type .csv est autorisé"
-//                    )
-//                ]
+                'mapped' => false
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,

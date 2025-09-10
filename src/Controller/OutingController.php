@@ -2,19 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\City;
-use App\Entity\Location;
-use App\Repository\UtilisateurRepository;
-
 use App\Entity\Outing;
-use App\Form\Model\OutingSearch;
-use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
-
+use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,19 +88,16 @@ final class OutingController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
             $this->addFlash("succes", "Sortie ajoutée avec succès");
-            return $this->redirectToRoute('main_inscription');
+            return $this->redirectToRoute('main_home');
         }
-        // Retrieve all cities to display to the form
 
         return $this->render('outing/add.html.twig', [
             "outingForm" => $outingForm
         ]);
 
     }
-
-
     #[IsGranted('ROLE_USER')]
-    #[Route('/{id}', name: 'app_inscription')]
+    #[Route('/inscription/{id}', name: 'app_inscription')]
     public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
         ///user connecté
@@ -150,13 +141,18 @@ final class OutingController extends AbstractController
             "user" => $user,
             'sortie' => $sortie,
             'max' => $sortieMax,
+
+
+
+
+
         ]);
 
     }
 
     #[IsGranted('ROLE_USER')]
     #[Route('/delete/{id}', name: 'app_delete')]
-public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+    public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
 
 

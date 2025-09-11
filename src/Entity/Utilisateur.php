@@ -66,6 +66,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $userImage = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $pseudo = null;
+
     public function __construct()
     {
         $this->outingOrganizer = new ArrayCollection();
@@ -252,6 +255,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUserImage(string $userImage): static
     {
         $this->userImage = $userImage;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }

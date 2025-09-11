@@ -100,14 +100,10 @@ final class OutingController extends AbstractController
     #[Route('/inscription/{id}', name: 'app_inscription')]
     public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
-
-
-
         ///user connecté
         $user = $this->getUser();
 
         $sortie = $outingRepository->find($id);
-
 
         $date = new \DateTime('now');
         $dateInscription = $sortie->getRegistrationLimitDate();
@@ -141,7 +137,6 @@ final class OutingController extends AbstractController
 
         $this->addFlash('type', 'Vous etes inscrit ! Bravo !');
 
-
         return $this->redirectToRoute('main_inscription', [
             "user" => $user,
             'sortie' => $sortie,
@@ -152,7 +147,6 @@ final class OutingController extends AbstractController
 
 
         ]);
-
 
     }
 

@@ -2,17 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateur;
+use App\Form\InscriptionCSVType;
 use App\Form\UserFormType;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use function PHPUnit\Framework\throwException;
 
 class UserController extends AbstractController
 {
@@ -54,14 +59,11 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/afficheUser/{id}', name: 'afficheUser', requirements: ['id' => '\d+'])]
 
     public function afficheUser(int $id, UtilisateurRepository $repository): Response
     {
-        $userConnected = $this->getUser();
-        if(!$userConnected) {
-            return $this->redirectToRoute('app_login');
-        }
         $user = $repository->find($id);
 
         if(!$user){
@@ -76,7 +78,11 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/updateUser', name: 'update_user')]
 
-    public function updateUser(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function updateUser(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager
+    ): Response
     {
 
         $user = $this->getUser();
@@ -110,4 +116,73 @@ class UserController extends AbstractController
             'userForm' => $userForm
         ]);
     }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/inscriptionCSV', name: 'inscriptionCSV')]
+
+    public function inscriptionCSV(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager)
+    {
+        $userConnected = $this->getUser();
+        if (!$userConnected) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $csvForm = $this->createForm(InscriptionCSVType::class);
+        $csvForm->handleRequest($request);
+
+        if ($csvForm->isSubmitted() && $csvForm->isValid()) {
+
+            $file = $csvForm->get('fichier')->getData();
+            $campus = $csvForm->get('campus')->getData();
+            $role = $csvForm->get('roles')->getData();
+
+            // Open the file
+            if (($handle = fopen($file->getPathname(), "r")) !== false) {
+                // Read and process the lines.
+                // Skip the first line if the file includes a header
+
+                while (($data = fgetcsv($handle, 80, ";")) !== false) {
+                    // Do the processing: Map line to entity, validate if needed
+
+                    if ($data[0] == "pseudo") {
+                        continue;
+                    }
+                    $user = new Utilisateur();
+                    // Assign fields
+
+                    $user->setPseudo($data[0]);
+                    $user->setLastName($data[1]);
+                    $user->setFirstName($data[2]);
+                    $user->setEmail($data[3]);
+                    $user->setPhoneNumber($data[4]);
+
+                    $plainPassword = $csvForm->get('plainPassword')->getData();
+                    $password = $passwordHasher->hashPassword($user, $plainPassword);
+                    $user->setPassword($password);
+
+                    $user->setActif(true);
+                    $user->setRoles($role);
+                    $user->setCampus($campus);
+                    $entityManager->persist($user);
+
+                }
+                fclose($handle);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'User profile created !');
+                return $this->redirectToRoute('main_home');
+            }
+
+            return $this->render('user/inscriptionCSV.html.twig', [
+                'csvForm' => $csvForm
+            ]);
+        }
+        return $this->render('user/inscriptionCSV.html.twig', [
+            'csvForm' => $csvForm
+        ]);
+    }
+
 }

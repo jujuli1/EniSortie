@@ -37,11 +37,11 @@ final class MainController extends AbstractController
      *
      * @return a Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/', name: 'main_home')]
     public function listOutings(
         Request $request,
         OutingRepository $outingRepository,
-        UtilisateurRepository $utilisateurRepository
     ): Response {
         // Create the search form based on OutingSearchType and bind it to the search model
         $searchOuting = new OutingSearch();
@@ -70,6 +70,8 @@ final class MainController extends AbstractController
         ]);
 
     }
+
+
 
     #[IsGranted('ROLE_USER')]
     #[Route('/inscription', name: 'main_inscription')]

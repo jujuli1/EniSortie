@@ -87,7 +87,7 @@ final class OutingController extends AbstractController
             $outing->setOrganizer($this->getUser());
             $entityManager->persist($outing);
             $entityManager->flush();
-            $this->addFlash("succes", "Sortie ajoutée avec succès");
+            $this->addFlash("success", "Sortie ajoutée avec succès");
             return $this->redirectToRoute('main_home');
         }
 
@@ -96,6 +96,167 @@ final class OutingController extends AbstractController
         ]);
 
     }
+
+
+    /*
+     * Method to update an outing
+     *
+     * @param Request $request,
+        OutingRepository $outingRepository,
+        StatusRepository $statusRepository,
+        EntityManagerInterface $entityManager,
+        int $id
+     *
+     * @return a Response
+     */
+    #[IsGranted('ROLE_USER')]
+    #[Route('/update/{id}', name: 'update')]
+    public function updateOuting(
+        Request $request,
+        OutingRepository $outingRepository,
+        StatusRepository $statusRepository,
+        EntityManagerInterface $entityManager,
+        int $id
+    ): Response {
+        // Retrieve the outing by its unique identifier
+        $outing = $outingRepository->find($id);
+
+        // Check if the outing isn't retrieved to throw a created not found exception
+        if (!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas.");
+        }
+
+        // Check if the connected user isn't the organizer of the outing to throw a denied  exception
+        if ($outing->getOrganizer() !== $this->getUser()) {
+            throw $this->createAccessDeniedException("Vous n’êtes pas l’organisateur de cette sortie.");
+        }
+        // Crete an updating outing form and handle the request
+        $updatingOutingForm = $this->createForm(OutingType::class, $outing);
+        $updatingOutingForm->handleRequest($request);
+
+        // Check if the form is submitted and valid
+        if ($updatingOutingForm->isSubmitted() && $updatingOutingForm->isValid()) {
+            // Get the action, to set the outing status according to the clicked button
+            $action = $request->request->get('action');
+            if($action === 'save') {
+                $status = $statusRepository->findOneBy(['label' => 'Créée']);
+
+            } elseif ($action === 'publish') {
+                $status = $statusRepository->findOneBy(['label' => 'Ouverte']);
+
+            } elseif ($action === 'delete') {
+                $entityManager->remove($outing);
+                $entityManager->flush();
+                $this->addFlash("success", "Sortie supprimée.");
+                return $this->redirectToRoute('main_home');
+
+            } elseif ($action === 'cancel') {
+                return $this->redirectToRoute('main_home');
+            }
+            // Only update the outing's status if a new status has been determined from the submitted action
+            if (isset($status)) {
+                $outing->setStatus($status);
+            }
+            // Flash the data
+            $entityManager->flush();
+             // Add the flash with the successful message
+            $this->addFlash("success", "Sortie mise à jour avec succès !");
+            // Redirect to the main home route
+            return $this->redirectToRoute('main_home');
+        }
+
+        // Display the updating outing form with necessary data
+        return $this->render('outing/update.html.twig', [
+            'updateOutingForm' => $updatingOutingForm,
+            'outing' => $outing,
+        ]);
+    }
+
+
+    /*
+     * Method to update the outing status from créée to Ouverte
+     *
+     * @param OutingRepository $outingRepository,
+        StatusRepository $statusRepository,
+        EntityManagerInterface $entityManager,
+        int $id,
+     *
+     * @return a Response
+     */
+    #[IsGranted('ROLE_USER')]
+    #[Route('/publish/{id}', name: 'publish')]
+    public function publishOuting(
+        OutingRepository $outingRepository,
+        StatusRepository $statusRepository,
+        EntityManagerInterface $entityManager,
+        int $id,
+    ): Response
+    {
+        // Retrieve the outing by its unique identifier
+        $outing = $outingRepository->find($id);
+        // Check if the outing isn't retrieved to throw a  created a not found exception
+        if(!$outing) {
+            throw $this->createNotFoundException("La sortie sélectionnée n'existe pas");
+        }
+
+        // Retrieve the  status witch has "Ouverte" as label
+        $status = $statusRepository->findOneBy(['label' => 'Ouverte']);
+        if (!$status) {
+            throw $this->createNotFoundException("Le statut 'Ouverte' n'existe pas");
+        }
+        // Set the outing status with the new label
+        $outing->setStatus($status);
+        // Flush the data
+        $entityManager->flush();
+        $this->addFlash("success", "La sortie a été publiée avec succès");
+        // Redirect to the main home route
+        return $this->redirectToRoute('main_home');
+
+    }
+
+
+    /*
+    * Method to update the outing status from publiée to Annulée
+    *
+    * @param OutingRepository $outingRepository,
+       StatusRepository $statusRepository,
+       EntityManagerInterface $entityManager,
+       int $id,
+    *
+    * @return a Response
+    */#[IsGranted('ROLE_USER')]
+    #[Route('/cancel/{id}', name: 'cancel')]
+    public function cancelOuting(
+        OutingRepository $outingRepository,
+        StatusRepository $statusRepository,
+        EntityManagerInterface $entityManager,
+        int $id,
+    ): Response
+    {
+        // Retrieve the outing by its unique identifier
+        $outing = $outingRepository->find($id);
+        // Check if the outing isn't retrieved to throw a  created a not found exception
+        if(!$outing) {
+            throw $this->createNotFoundException("La sortie sélectionnée n'existe pas");
+        }
+
+        // Retrieve the  status witch has "Annulée" as label
+        $status = $statusRepository->findOneBy(['label' => 'Annulée']);
+        if (!$status) {
+            throw $this->createNotFoundException("Le statut 'Ouverte' n'existe pas");
+        }
+        // Set the outing status with the new label
+        $outing->setStatus($status);
+        // Flush the data
+        $entityManager->flush();
+        $this->addFlash("success", "la Sortie a été annulée");
+        // Redirect to the main home route
+        return $this->redirectToRoute('main_home');
+
+    }
+
+
+
     #[IsGranted('ROLE_USER')]
     #[Route('/inscription/{id}', name: 'app_inscription')]
     public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)

@@ -4,7 +4,7 @@
     <div class="list-outing-page-section">
         <div class="display-date">
             <p>Date du jour: {{ "now"|date("m/d/Y") }}</p>
-            <p>Utilisateur: {{  user.userIdentifier }}</p>
+            <p>Utilisateur: {{ user.firstName }} {{ user.lastName }}</p>
         </div>
         <h2>Filtrer les sorties</h2>
         <div class="search-form">
@@ -73,12 +73,15 @@
                         {% endif %}
 
                         {% if permission.canEditAndPublish(outing, app.user) %}
-                            <a href="">Modifier </a>
-                            <a href="">Publier</a>
+                            <a href="{{ path('sortie_update', {'id': outing.id}) }}">Modifier </a>
+                            <a href="{{ path('sortie_publish', {'id': outing.id}) }}">Publier</a>
                         {% endif %}
 
                         {% if permission.canCancel(outing, app.user) %}
-                            <a href="">Annuler</a>
+                            <a href="{{ path('sortie_cancel', {'id': outing.id}) }}"
+                               onclick="return confirm('Es-tu sûr de vouloir annuler cette sortie ?');">
+                                Annuler
+                            </a>
                         {% endif %}
                     </td>
                 </tr>

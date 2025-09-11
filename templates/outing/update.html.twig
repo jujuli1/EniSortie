@@ -9,35 +9,30 @@
 
 {% block javascripts %}
     <script src="https://kit.fontawesome.com/4d36bcb065.js" crossorigin="anonymous"></script>
-      {{ parent() }}
+    {{ parent() }}
 {% endblock %}
 
 {% block body %}
     <section class="outing-form-section">
-        <h2>Créer une sortie</h2>
-        <!--   ------- Outing form -------- -->
-        {{ form_start(outingForm) }}
+        <h2>Modifier une sortie</h2>
+        {{ form_start(updateOutingForm) }}
         <div class="add-outing-form">
             <div class="left-outing-form-fields">
-                {{ form_row(outingForm.name) }}
-                {{ form_row(outingForm.startDateTime) }}
-                {{ form_row(outingForm.registrationLimitDate) }}
-                {{ form_row(outingForm.nbMaxRegistration) }}
+                {{ form_row(updateOutingForm.name) }}
+                {{ form_row(updateOutingForm.startDateTime) }}
+                {{ form_row(updateOutingForm.registrationLimitDate) }}
+                {{ form_row(updateOutingForm.nbMaxRegistration) }}
                 <div class="outing-duration-field">
-                    {{ form_row(outingForm.duration)}} minutes
+                    {{ form_row(updateOutingForm.duration)}} minutes
                 </div>
                 <div class="outing-textarea-field">
-                    {{ form_row(outingForm.outingInfos) }}
+                    {{ form_row(updateOutingForm.outingInfos) }}
                 </div>
             </div>
             <div class="right-outing-form-fields">
-                {{ form_row(outingForm.campus) }}
-                <div class="outing-form-town-field">
-                    <label for="city">Ville : </label>
-                    <select name="city" id="city"></select>
-                </div>
+                {{ form_row(updateOutingForm.campus) }}
                 <div class="outing-form-location-field">
-                    {{ form_row(outingForm.location) }} <a href="{{ path('location_add') }}"><div class="outing-form-add-location-icon"><i class="fa-sharp fa-solid fa-plus"></i></div></a>
+                    {{ form_row(updateOutingForm.location) }} <a href="{{ path('location_add') }}"><div class="outing-form-add-location-icon"><i class="fa-sharp fa-solid fa-plus"></i></div></a>
                 </div>
                 <div>
                     <label for="street">Rue : </label>
@@ -58,13 +53,18 @@
             </div>
         </div>
         <div class="btn-outing-add">
+            <!-- Save button: submits the form with action=save -->
             <button type="submit" name="action" value="save">Enregistrer</button>
+            <!-- Publish button: submits the form with action=publish -->
             <button type="submit" name="action" value="publish">Publier la sortie</button>
-            <button type="reset">Annuler</button>
+            <!-- Delete button: asks for confirmation before submitting -->
+            <button type="submit" name="action" value="delete"
+                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer la sortie {{ outing.name }} ?');">
+                Supprimer la sortie
+            </button>
+            <!-- Reset button: resets the form fields -->
+            <button type="submit" name="action" value="cancel">Annuler</button>
         </div>
-        {{ form_end(outingForm) }}
+        {{ form_end(updateOutingForm) }}
     </section>
 {% endblock %}
-
-
-

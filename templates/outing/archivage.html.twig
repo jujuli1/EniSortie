@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+    <p>Les sorties datant de plus de 1 mois à partir du {{ date|date('d/m/Y')}} on toutes été archivées .</p>
+    <a href="{{ path('main_home') }}">Retour</a>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

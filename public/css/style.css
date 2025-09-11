@@ -162,6 +162,11 @@ ul{
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
+.areUAdmin {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+}
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 360px) and (orientation: portrait){
     body{

@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+
+    <div class="partieAdmin">
+
+
+
+
+
+
+
     <div class="list-outing-page-section">
         <div class="display-date">
             <p>Date du jour: {{ "now"|date("m/d/Y") }}</p>
@@ -31,6 +41,11 @@
         <div class="created-outing-link">
             <a href="{{ path('sortie_add') }}">Créer une sortie</a>
         </div>
+        <div>
+            <a href="{{ path('sortie_app_archivage') }}">Archiver des sorties</a>
+        </div>
+
+
 
         <table id="outing-table" border="1" cellpadding="10" cellspacing="0">
             <thead>
@@ -47,6 +62,8 @@
             </thead>
             <tbody>
             {% for outing in outings %}
+
+
                 <tr>
                     <td>{{ outing.name }}</td>
                     <td>{{ outing.startDateTime|date('d/m/Y H:i') }}</td>
@@ -63,11 +80,12 @@
                         <a href="{{ path('detail') }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName }}</a>
                     </td>
 
-
+                    {% if(outing.status.label != 'Archivé') %}
                     <td>
                         {% if permission.canShow(outing) %}
                             <a href="{{ path('app_detail_sortie', {'id': outing.id}) }}">Afficher </a>
                         {% endif %}
+
 
                     <td>
                         {% if permission.canShow(outing, app.user) %}
@@ -75,13 +93,20 @@
                         {% endif %}
                     </td>
 
+
+
                     <td>
+
 
                         {% if permission.canShow(outing, app.user) %}
                             <a href="{{ path('sortie_app_inscription', {'id': outing.id}) }}">S'inscrire</a>
                         {% endif %}
 
+
+
                     </td>
+
+                    {%  endif %}
 
 
 
@@ -101,8 +126,12 @@
                     <td colspan="7">Aucune sortie trouvée</td>
                 </tr>
             {% endfor %}
+
+
             </tbody>
         </table>
+
+
 
     </div>
     {% block javascripts %}

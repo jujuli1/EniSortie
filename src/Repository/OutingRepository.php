@@ -115,6 +115,8 @@ class OutingRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+
+
 }
 
 

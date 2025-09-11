@@ -26,6 +26,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class OutingController extends AbstractController
 {
 
+
     /*
      * Method to create an outing
      *
@@ -106,11 +107,9 @@ final class OutingController extends AbstractController
 
 
     #[IsGranted('ROLE_USER')]
-    #[Route('/{id}', name: 'app_inscription')]
-    public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+    #[Route('/{id}', name: 'app_inscription', requirements: ['id' => '\d+'])]
+    public function inscrire(OutingRepository $outingRepository,StatusRepository $statusRepository, int $id, EntityManagerInterface $emi)
     {
-
-
 
         ///user connecté
         $user = $this->getUser();
@@ -131,7 +130,7 @@ final class OutingController extends AbstractController
             ]);
         }
 
-        if( $dateInscription > $date ) {
+        if( $dateInscription < $date ) {
             return $this->render('main/failed_registration.html.twig', [
                 'max' => $sortieMax,
                 'errorMax' => '',
@@ -139,12 +138,14 @@ final class OutingController extends AbstractController
             ]);
         }
 
+
+
+
+
+
         $sortie->addParticipant($user);
 
-        //dd($sortie);
 
-
-        $emi->persist($sortie);
         $emi->flush();
 
 
@@ -162,13 +163,13 @@ final class OutingController extends AbstractController
 
 
 
+
+
     #[IsGranted('ROLE_USER')]
     #[Route('/delete/{id}', name: 'app_delete')]
-public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+public function supprimer( OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
-
-
-        // annuler la sortie
+        // se desister de la sortie
 
         $participant = $this->getUser();
         $sortie = $outingRepository->find($id);
@@ -179,17 +180,49 @@ public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRe
             throw $this->createNotFoundException('Aucun uzer trouvée avec l\'ID : ' . $id);
         }
 
+        $emi->persist($sortie);
         $emi->flush();
 
         return $this->render('main/campus_delete.html.twig', [
 
         ]);
 
-
-
-
     }
 
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/archivage', name: 'app_archivage')]
+public function archiver(OutingRepository $outingRepository,StatusRepository $statusRepository, EntityManagerInterface $emi)
+    {
+        //changement de role vers "archivé" au bout de 1 mois
+        $status = $statusRepository->findOneBy(['label' => 'Archivé']);
+
+        $sortie = $outingRepository->findAll();
+
+        $date = new \DateTime('now');
+
+        foreach ($sortie as $sorties) {
+
+            $dateInscription = $sorties->getStartDateTime();
+            $AfterOneMonth = (clone $dateInscription)->modify('+10 month');
 
 
+            if($date > $AfterOneMonth) {
+
+
+                $sorties->setStatus($status);
+                $emi->persist($sorties);
+
+
+            }
+        }
+
+        $emi->flush();
+
+        return $this->render('outing/archivage.html.twig', [
+            'outing' => $sortie,
+            'date' => $date,
+
+        ]);
+
+    }
 }

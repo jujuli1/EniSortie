@@ -21,6 +21,18 @@
 
         {% endif %}
 
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="areUAdmin">
+
+                <p>Vous etes un administrateur ? </p>
+                <a href="{{ path('app_admin') }}">Cliquez ici </a>
+
+
+
+            </div>
+
+        {% endif %}
+
 
 
 

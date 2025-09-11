@@ -2,13 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
+use App\Entity\Location;
+use App\Repository\UtilisateurRepository;
+
 use App\Entity\Outing;
+use App\Form\Model\OutingSearch;
+use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
-use App\Repository\UtilisateurRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -334,17 +340,49 @@ final class OutingController extends AbstractController
             throw $this->createNotFoundException('Aucun uzer trouvée avec l\'ID : ' . $id);
         }
 
+        $emi->persist($sortie);
         $emi->flush();
 
         return $this->render('main/campus_delete.html.twig', [
 
         ]);
 
-
-
-
     }
 
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/archivage', name: 'app_archivage')]
+public function archiver(OutingRepository $outingRepository,StatusRepository $statusRepository, EntityManagerInterface $emi)
+    {
+        //changement de role vers "archivé" au bout de 1 mois
+        $status = $statusRepository->findOneBy(['label' => 'Archivé']);
+
+        $sortie = $outingRepository->findAll();
+
+        $date = new \DateTime('now');
+
+        foreach ($sortie as $sorties) {
+
+            $dateInscription = $sorties->getStartDateTime();
+            $AfterOneMonth = (clone $dateInscription)->modify('+10 month');
 
 
+            if($date > $AfterOneMonth) {
+
+
+                $sorties->setStatus($status);
+                $emi->persist($sorties);
+
+
+            }
+        }
+
+        $emi->flush();
+
+        return $this->render('outing/archivage.html.twig', [
+            'outing' => $sortie,
+            'date' => $date,
+
+        ]);
+
+    }
 }

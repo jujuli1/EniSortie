@@ -57,7 +57,7 @@
                     {% endif %}
 
                     <td>
-                        <a href="{{ path('detail') }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName }}</a>
+                        <a href="{{ path('afficheUser', {'id': outing.organizer.id}) }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName }}</a>
                     </td>
                     <td>
                         {% if permission.canShow(outing) %}
@@ -68,7 +68,7 @@
                             <a href="">Se désister</a>
                         {% endif %}
 
-                        {% if permission.canSubscribe(outing, app.user)  and outing.startDateTime < date() %}
+                        {% if permission.canSubscribe(outing, app.user) and outing.startDateTime > "now"|date("Y-m-d H:i:s")|date %}
                             <a href="{{ path('sortie_app_inscription', {'id': outing.id}) }}">S'inscrire</a>
                         {% endif %}
 
@@ -79,7 +79,7 @@
 
                         {% if permission.canCancel(outing, app.user) %}
                             <a href="{{ path('sortie_cancel', {'id': outing.id}) }}"
-                               onclick="return confirm('Es-tu sûr de vouloir annuler cette sortie ?');">
+                               onclick="return confirm('Êtes-vous sûr de vouloir annuler cette sortie ?');">
                                 Annuler
                             </a>
                         {% endif %}

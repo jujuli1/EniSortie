@@ -24,6 +24,10 @@ class OutingSearchType extends AbstractType
             ->add('nameContentWord', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
                 'required' => false,
                 'label' => 'Le nom de la sortie contient : ',
+                'attr' => [
+                    'placeholder' => 'Rechercher...',
+                    'class' => 'search-input',
+                ],
             ])
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',

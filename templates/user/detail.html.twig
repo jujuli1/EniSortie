@@ -5,25 +5,31 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Profile de {{ user.firstname }}</h1>
+    <h2 class="profile-title">Profile de {{ user.firstname }} {{ user.lastname }}</h2>
 
     <div class="user-details">
-
-        <img style="width: 200px;" src="{{ asset('userImages/' ~ user.userImage) }}"
-             alt="image de {{ user.firstname }}">
-        <p>Prénom: {{ user.firstName }}</p>
-        <br>
-        <p>Nom: {{ user.lastName }}</p>
-        <br>
-        <p>Téléphone: {{ user.phoneNumber }}</p>
-        <br>
-        <p>Mail: {{ user.email }}</p>
-        <br>
-        <p>Campus: {{ user.campus.name }}</p>
-        <br>
+        <div class="div-image">
+            <img style="width: 200px;" src="{{ asset('userImages/' ~ user.userImage) }}"
+                 alt="image de {{ user.firstname }}">
+        </div>
         <div>
-
-            <a href="{{ path('main_home') }}">Retour</a>
+            <p>Prénom: {{ user.firstName }}</p>
+            <br>
+            <p>Nom: {{ user.lastName }}</p>
+            <br>
+            <p>Téléphone: {{ user.phoneNumber }}</p>
+            <br>
+            <p>Mail: {{ user.email }}</p>
+            <br>
+            <p>Campus: {{ user.campus.name }}</p>
+            <br>
+            <div class="profil-link">
+                {# Only show the edit link when the connected user is the same as the profile's user #}
+                {% if app.user and app.user.id == user.id %}
+                    <a href="{{ path('update_user') }}">Modifier mon profil</a>
+                {% endif %}
+                <a href="{{ path('main_home') }}">Retour</a>
+            </div>
         </div>
 
     </div>

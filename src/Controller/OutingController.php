@@ -2,13 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
+use App\Entity\Location;
+use App\Repository\UtilisateurRepository;
+
 use App\Entity\Outing;
+use App\Form\Model\OutingSearch;
+use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\CampusRepository;
 use App\Repository\LocationRepository;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
-use App\Repository\UtilisateurRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +25,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/sortie', name: 'sortie_')]
 final class OutingController extends AbstractController
 {
+
 
     /*
      * Method to create an outing
@@ -88,22 +95,27 @@ final class OutingController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
             $this->addFlash("succes", "Sortie ajoutée avec succès");
-            return $this->redirectToRoute('main_home');
+            return $this->redirectToRoute('main_inscription');
         }
+        // Retrieve all cities to display to the form
 
         return $this->render('outing/add.html.twig', [
             "outingForm" => $outingForm
         ]);
 
     }
+
+
     #[IsGranted('ROLE_USER')]
-    #[Route('/inscription/{id}', name: 'app_inscription')]
-    public function inscrire(OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+    #[Route('/{id}', name: 'app_inscription', requirements: ['id' => '\d+'])]
+    public function inscrire(OutingRepository $outingRepository,StatusRepository $statusRepository, int $id, EntityManagerInterface $emi)
     {
+
         ///user connecté
         $user = $this->getUser();
 
         $sortie = $outingRepository->find($id);
+
 
         $date = new \DateTime('now');
         $dateInscription = $sortie->getRegistrationLimitDate();
@@ -118,7 +130,7 @@ final class OutingController extends AbstractController
             ]);
         }
 
-        if( $dateInscription > $date ) {
+        if( $dateInscription < $date ) {
             return $this->render('main/failed_registration.html.twig', [
                 'max' => $sortieMax,
                 'errorMax' => '',
@@ -126,37 +138,38 @@ final class OutingController extends AbstractController
             ]);
         }
 
+
+
+
+
+
         $sortie->addParticipant($user);
 
-        //dd($sortie);
 
-
-        $emi->persist($sortie);
         $emi->flush();
 
 
         $this->addFlash('type', 'Vous etes inscrit ! Bravo !');
 
+
         return $this->redirectToRoute('main_inscription', [
             "user" => $user,
             'sortie' => $sortie,
             'max' => $sortieMax,
-
-
-
-
-
         ]);
+
 
     }
 
+
+
+
+
     #[IsGranted('ROLE_USER')]
     #[Route('/delete/{id}', name: 'app_delete')]
-    public function supprimer(UtilisateurRepository $utilisateurRepository, OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
+public function supprimer( OutingRepository $outingRepository, int $id, EntityManagerInterface $emi)
     {
-
-
-        // annuler la sortie
+        // se desister de la sortie
 
         $participant = $this->getUser();
         $sortie = $outingRepository->find($id);
@@ -167,17 +180,49 @@ final class OutingController extends AbstractController
             throw $this->createNotFoundException('Aucun uzer trouvée avec l\'ID : ' . $id);
         }
 
+        $emi->persist($sortie);
         $emi->flush();
 
         return $this->render('main/campus_delete.html.twig', [
 
         ]);
 
-
-
-
     }
 
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/archivage', name: 'app_archivage')]
+public function archiver(OutingRepository $outingRepository,StatusRepository $statusRepository, EntityManagerInterface $emi)
+    {
+        //changement de role vers "archivé" au bout de 1 mois
+        $status = $statusRepository->findOneBy(['label' => 'Archivé']);
+
+        $sortie = $outingRepository->findAll();
+
+        $date = new \DateTime('now');
+
+        foreach ($sortie as $sorties) {
+
+            $dateInscription = $sorties->getStartDateTime();
+            $AfterOneMonth = (clone $dateInscription)->modify('+10 month');
 
 
+            if($date > $AfterOneMonth) {
+
+
+                $sorties->setStatus($status);
+                $emi->persist($sorties);
+
+
+            }
+        }
+
+        $emi->flush();
+
+        return $this->render('outing/archivage.html.twig', [
+            'outing' => $sortie,
+            'date' => $date,
+
+        ]);
+
+    }
 }

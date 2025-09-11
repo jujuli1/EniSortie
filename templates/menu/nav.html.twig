@@ -1,22 +1,42 @@
-<link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+
 <nav>
-    <div class="sortir-logo-div">
-        <div>
-            <a href="{{ path('detail') }}"><h1>Sortir.com</h1></a>
-        </div>
-        <ul class="nav">
 
-            {% if app.user %}
+    <ul class="nav">
 
-                <li><a href="{{ path('main_home') }}">Accueil</a></li>
-                <li><a href="{{ path('detail') }}">Mon profile</a></li>
-                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-            {% else %}
-                <li><a href="{{ path('app_login') }}">Login</a></li>
-            {% endif %}
+        <li><a href="{{ path('main_home') }}">Home</a></li>
+
+        {% if app.user %}
+
+            <li><a href="{{ path('app_logout') }}">Logout</a></li>
+            <li><a href="{{ path('detail') }}">Mon profile</a></li>
+            <li><a href="{{ path('update_user') }}">Gérer mon profile</a></li>
+
+            {# <li><a  href="{{ path('main_inscription') }}">S'inscrire à une sortie</a></li> #}
+            <li><a class="AddOutingBtn" href="{{ path('sortie_add') }}">Ajouter une sortie</a></li>
 
 
-        </ul>
-    </div>
+
+        {% else %}
+            <li><a href="{{ path('app_login') }}">Login</a></li>
+
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="areUAdmin">
+
+                <p>Vous etes un administrateur ? </p>
+                <a href="{{ path('app_admin') }}">Cliquez ici </a>
+
+
+
+            </div>
+
+        {% endif %}
+
+
+
+
+
+    </ul>
 
 </nav>
